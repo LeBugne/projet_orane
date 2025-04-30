@@ -1,0 +1,8 @@
+# Ignorer les fichiers .class
+*.class
+
+# Ignorer le contenu du dossier /target
+/target
+
+# Ignorer les fichiers et dossiers .idea
+.idea/
