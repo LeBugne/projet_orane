@@ -1,7 +1,7 @@
 # Ignorer les fichiers .class
 *.class
 
-# Ignorer le contenu du dossier /target
+# Ignorer le contenu du dossier /target (Maven)
 /target
 
 # Ignorer les fichiers et dossiers .idea

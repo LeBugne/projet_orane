@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="617.0" prefWidth="1053.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.AccueilController">
+   <center>
+      <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="10.0" minWidth="200.0" prefHeight="124.0" prefWidth="400.0" spacing="50.0" BorderPane.alignment="CENTER">
+         <children>
+            <ComboBox fx:id="comboBox" accessibleRole="CONTEXT_MENU" prefHeight="24.0" prefWidth="175.0" promptText="Ajoutez une entrée" />
+            <TextField fx:id="searchAccueil" maxHeight="35.0" maxWidth="400.0" promptText="Saisir une adresse" />
+         </children>
+      </VBox>
+   </center>
+</BorderPane>
