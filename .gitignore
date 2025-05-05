@@ -1,8 +1,11 @@
 # Ignorer les fichiers .class
 *.class
+#Ignorer les scipt
+*.sh
 
 # Ignorer le contenu du dossier /target (Maven)
 /target
+/verif
 
 # Ignorer les fichiers et dossiers .idea
 .idea/
