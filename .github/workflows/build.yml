@@ -61,16 +61,15 @@ jobs:
 
       - name: Package with jpackage
         run: >
-          jpackage ^
-          --type exe ^
-          --input target ^
-          --dest dist ^
-          --name TravauxApp ^
-          --main-jar TravauxApp-1.0.jar ^
-          --main-class org.example.Main ^
-          --icon icon.ico ^
-          --add-modules javafx.controls,javafx.fxml ^
-          --runtime-image path\to\custom-runtime
+          jpackage
+          --type exe
+          --input target
+          --dest dist
+          --name TravauxApp
+          --main-jar TravauxApp-1.0.jar
+          --main-class org.example.Main
+          --icon icon.ico
+          --add modules javafx.controls,javafx.fxml
           --win-console
 
       - name: Upload Windows artifact
