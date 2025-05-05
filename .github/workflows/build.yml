@@ -2,9 +2,11 @@ name: Build and Package Java App
 
 on:
   push:
-    tags:
-      - 'v*'  # ex: v1.0.0
-      - 'v.*'
+    branches:
+      - main
+    # Cette condition permet de cibler des messages de commit spécifiques
+    # Ici, on ne déclenche le workflow que pour des commits contenant "[build]" dans le message
+    commit_message: '.*\[build\].*'
 
 permissions:
   contents: write
@@ -50,11 +52,13 @@ jobs:
       - name: Checkout source
         uses: actions/checkout@v4
 
-      - name: Set up JDK
+      - name: Set up JavaFX SDK
         run: |
           curl -L -o javafx.zip https://download2.gluonhq.com/openjfx/20.0.2/openjfx-20.0.2_windows-x64_bin-sdk.zip
-          unzip javafx.zip -d .
-          mv openjfx-20.0.2 javafx-sdk
+          tar -xf javafx.zip
+          Move-Item -Path "openjfx-20.0.2_windows-x64_bin-sdk" -Destination "javafx-sdk"
+        shell: pwsh
+
 
       - name: Build with Maven
         run: mvn clean package
