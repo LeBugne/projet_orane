@@ -30,9 +30,9 @@ jobs:
             --type deb \
             --input target \
             --dest dist \
-            --name MonApp \
-            --main-jar ton-jar-final.jar \
-            --main-class com.tonpackage.Main \
+            --name TravauxApp \
+            --main-jar TravauxApp-1.0.jar \
+            --main-class org.example.Main \
             --icon icon.jpeg
 
       - name: Upload Linux artifact
@@ -62,9 +62,9 @@ jobs:
             --type exe ^
             --input target ^
             --dest dist ^
-            --name MonApp ^
-            --main-jar ton-jar-final.jar ^
-            --main-class com.tonpackage.Main ^
+            --name TravauxApp ^
+            --main-jar TravauxApp-1.0.jar ^
+            --main-class org.example.Main ^
             --icon icon.ico
 
       - name: Upload Windows artifact
