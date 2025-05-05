@@ -69,7 +69,7 @@ jobs:
           --main-jar TravauxApp-1.0.jar
           --main-class org.example.Main
           --icon icon.ico
-          --add modules javafx.controls,javafx.fxml
+          --add-modules javafx.controls,javafx.fxml
           --win-console
 
       - name: Upload Windows artifact
