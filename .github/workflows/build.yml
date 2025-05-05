@@ -52,35 +52,34 @@ jobs:
       - name: Checkout source
         uses: actions/checkout@v4
 
-      - name: Set up JavaFX SDK
-        run: |
-          curl -L -o javafx.zip https://download2.gluonhq.com/openjfx/20.0.2/openjfx-20.0.2_windows-x64_bin-sdk.zip
-          Expand-Archive -Path javafx.zip -DestinationPath .
-          Move-Item -Path "openjfx-20.0.2_windows-x64_bin-sdk" -Destination "javafx-sdk"
-        shell: pwsh
+      - name: Set up Liberica JDK with JavaFX
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'liberica'
+          java-version: '21'
+          java-package: 'jdk+fx'
 
 
       - name: Build with Maven
         run: mvn clean package
 
       - name: Package with jpackage
-        run: >
-          jpackage
-          --type exe
-          --input target
-          --dest dist
-          --name TravauxApp
-          --main-jar TravauxApp-1.0.jar
-          --main-class org.example.Main
-          --icon icon.ico
-          --module-path javafx-sdk/lib
-          --add-modules javafx.controls,javafx.fxml
-          --win-console
+        run: |
+          jpackage `
+            --type exe `
+            --input target `
+            --dest dist `
+            --name TravauxApp `
+            --main-jar TravauxApp-1.0.jar `
+            --main-class org.example.Main `
+            --icon icon.ico `
+            --win-console
+        shell: pwsh
 
       - name: Upload Windows artifact
         uses: actions/upload-artifact@v4
         with:
-          name: MonApp-windows
+          name: TravauxApp-windows
           path: dist/*.exe
 
   release:
