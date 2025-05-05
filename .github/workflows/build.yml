@@ -4,8 +4,7 @@ on:
   push:
     tags:
       - 'v*'  # ex: v1.0.0
-      - 'v.*' # <- ajoute ce pattern si tu veux accepter v.0.0
-
+      - 'v.*'
 
 jobs:
   build-linux:
