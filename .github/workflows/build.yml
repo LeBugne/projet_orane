@@ -57,15 +57,15 @@ jobs:
         run: mvn clean package
 
       - name: Package with jpackage
-        run: |
-          jpackage ^
-            --type exe ^
-            --input target ^
-            --dest dist ^
-            --name TravauxApp ^
-            --main-jar TravauxApp-1.0.jar ^
-            --main-class org.example.Main ^
-            --icon icon.ico
+        run: >
+          jpackage
+          --type exe
+          --input target
+          --dest dist
+          --name TravauxApp
+          --main-jar TravauxApp-1.0.jar
+          --main-class org.example.Main
+          --icon icon.ico
 
       - name: Upload Windows artifact
         uses: actions/upload-artifact@v4
