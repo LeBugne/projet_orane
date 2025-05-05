@@ -79,7 +79,7 @@ jobs:
       - name: Upload Windows artifact
         uses: actions/upload-artifact@v4
         with:
-          name: TravauxApp-windows
+          name: MonApp-windows
           path: dist/*.exe
 
   release:
