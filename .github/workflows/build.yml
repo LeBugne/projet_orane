@@ -6,6 +6,9 @@ on:
       - 'v*'  # ex: v1.0.0
       - 'v.*'
 
+permissions:
+  contents: write
+
 jobs:
   build-linux:
     runs-on: ubuntu-latest
