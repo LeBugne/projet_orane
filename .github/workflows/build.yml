@@ -51,10 +51,10 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Set up JDK
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '17'
+        run: |
+          curl -L -o javafx.zip https://download2.gluonhq.com/openjfx/20.0.2/openjfx-20.0.2_windows-x64_bin-sdk.zip
+          unzip javafx.zip -d .
+          mv openjfx-20.0.2 javafx-sdk
 
       - name: Build with Maven
         run: mvn clean package
@@ -69,6 +69,7 @@ jobs:
           --main-jar TravauxApp-1.0.jar
           --main-class org.example.Main
           --icon icon.ico
+          --module-path javafx-sdk/lib
           --add-modules javafx.controls,javafx.fxml
           --win-console
 
