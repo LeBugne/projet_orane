@@ -1,0 +1,97 @@
+name: Build and Package Java App
+
+on:
+  push:
+    tags:
+      - 'v*'  # ex: v1.0.0
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Build with Maven
+        run: mvn clean package
+
+      - name: Package with jpackage
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y fakeroot libfuse2
+          jpackage \
+            --type deb \
+            --input target \
+            --dest dist \
+            --name MonApp \
+            --main-jar ton-jar-final.jar \
+            --main-class com.tonpackage.Main \
+            --icon icon.jpeg
+
+      - name: Upload Linux artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: MonApp-linux
+          path: dist/*.deb
+
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Build with Maven
+        run: mvn clean package
+
+      - name: Package with jpackage
+        run: |
+          jpackage ^
+            --type exe ^
+            --input target ^
+            --dest dist ^
+            --name MonApp ^
+            --main-jar ton-jar-final.jar ^
+            --main-class com.tonpackage.Main ^
+            --icon icon.ico
+
+      - name: Upload Windows artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: MonApp-windows
+          path: dist/*.exe
+
+  release:
+    needs: [build-linux, build-windows]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Linux artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: MonApp-linux
+          path: dist
+
+      - name: Download Windows artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: MonApp-windows
+          path: dist
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          files: dist/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
