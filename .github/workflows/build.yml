@@ -75,8 +75,6 @@ jobs:
             --icon icon.ico `
             --win-console `
             --add-modules javafx.controls,javafx.fxml,javafx.graphics,javafx.base
-        
-        
 
         shell: pwsh
 
@@ -84,7 +82,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: MonApp-windows
-          path: dist/*.
+          path: dist/*.exe
 
 
   release:
