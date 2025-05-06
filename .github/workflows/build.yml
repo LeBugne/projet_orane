@@ -73,7 +73,11 @@ jobs:
             --main-jar TravauxApp-1.0.jar `
             --main-class org.example.Main `
             --icon icon.ico `
-            --win-console
+            --win-console `
+            --add-modules javafx.controls,javafx.fxml,javafx.graphics,javafx.base
+        
+        
+
         shell: pwsh
 
       - name: Upload Windows artifact
