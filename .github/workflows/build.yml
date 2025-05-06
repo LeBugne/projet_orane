@@ -76,18 +76,10 @@ jobs:
             --win-console
         shell: pwsh
 
-      - name: Run the executable and capture logs
+      - name: Run JAR with logs
         run: |
-          $exePath = Get-ChildItem -Path dist -Filter "*.exe" | Select-Object -First 1
-          Write-Host "Running executable: $exePath"
-          & $exePath.FullName | Tee-Object -FilePath "execution.log"
+          java -jar target/TravauxApp-1.0.jar | Tee-Object -FilePath execution.log
         shell: pwsh
-
-      - name: Upload execution logs
-        uses: actions/upload-artifact@v4
-        with:
-          name: Execution-Logs
-          path: execution.log
 
       - name: Upload Windows artifact
         uses: actions/upload-artifact@v4

@@ -11,7 +11,6 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         // Charger le fichier FXML avec le chemin correct
 
-        System.out.println("Bienvenue !");
         FXMLLoader loader = new FXMLLoader(Main.class.getResource("/fxml/AccueilView.fxml"));
         Parent root = loader.load();
         primaryStage.setTitle("Gestion des Travaux");
@@ -20,6 +19,7 @@ public class Main extends Application {
     }
 
     public static void main(String[] args) {
+        System.out.println("Application JavaFX démarrée");
         launch(args);
     }
 }
