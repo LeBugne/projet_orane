@@ -61,14 +61,32 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Build with Maven
+      - name: Resolve Maven dependencies
+        run: mvn dependency:resolve
+
+      - name: Build JAR with Maven
         run: mvn clean package
+
+      - name: Verify JavaFX dependencies
+        run: |
+          ls -l $env:USERPROFILE\.m2\repository\org\openjfx\javafx-base\17.0.15\
+          ls -l $env:USERPROFILE\.m2\repository\org\openjfx\javafx-controls\17.0.15\
+          ls -l $env:USERPROFILE\.m2\repository\org\openjfx\javafx-fxml\17.0.15\
+          ls -l $env:USERPROFILE\.m2\repository\org\openjfx\javafx-graphics\17.0.15\
+        shell: pwsh
 
       - name: Create Runtime Image with jlink
         run: |
+          # Créer un dossier pour les JAR JavaFX
+          mkdir javafx-jars
+          cp $env:USERPROFILE\.m2\repository\org\openjfx\javafx-base\17.0.15\javafx-base-17.0.15-win.jar javafx-jars/
+          cp $env:USERPROFILE\.m2\repository\org\openjfx\javafx-controls\17.0.15\javafx-controls-17.0.15-win.jar javafx-jars/
+          cp $env:USERPROFILE\.m2\repository\org\openjfx\javafx-fxml\17.0.15\javafx-fxml-17.0.15-win.jar javafx-jars/
+          cp $env:USERPROFILE\.m2\repository\org\openjfx\javafx-graphics\17.0.15\javafx-graphics-17.0.15-win.jar javafx-jars/
+          # Exécuter jlink
           jlink `
-            --module-path "$env:USERPROFILE\.m2\repository\org\openjfx\javafx-controls\20.0.2\javafx-controls-20.0.2-win.jar;$env:USERPROFILE\.m2\repository\org\openjfx\javafx-fxml\20.0.2\javafx-fxml-20.0.2-win.jar;$env:USERPROFILE\.m2\repository\org\openjfx\javafx-graphics\20.0.2\javafx-graphics-20.0.2-win.jar;$env:USERPROFILE\.m2\repository\org\openjfx\javafx-base\20.0.2\javafx-base-20.0.2-win.jar;$env:JAVA_HOME\jmods" `
-            --add-modules java.base,javafx.controls,javafx.fxml,javafx.graphics,javafx.base `
+            --module-path "javafx-jars;$env:JAVA_HOME\jmods" `
+            --add-modules java.base,javafx.base,javafx.controls,javafx.fxml,javafx.graphics `
             --compress 2 `
             --no-header-files `
             --no-man-pages `
@@ -76,7 +94,7 @@ jobs:
             --output runtime
         shell: pwsh
 
-      - name: Package with jpackage
+      - name: Build Windows executable with jpackage
         run: |
           jpackage `
             --type exe `
@@ -89,7 +107,6 @@ jobs:
             --runtime-image runtime `
             --win-shortcut `
             --win-dir-chooser
-
         shell: pwsh
 
       - name: Upload Windows artifact
