@@ -1,5 +1,8 @@
 name: Build and Package Java App
 
+env:
+  TAG_NAME: release-${{ github.run_id }} #Comme un " #define" en C
+
 on:
   push:
     branches:
@@ -104,7 +107,7 @@ jobs:
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ github.ref_name }}
+          tag_name: ${{ env.TAG_NAME }}
           files: dist/*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
