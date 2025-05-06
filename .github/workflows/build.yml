@@ -109,6 +109,12 @@ jobs:
             --win-dir-chooser
         shell: pwsh
 
+      - name: Verify MSI file
+        run: |
+          ls -l dist/
+          if (-Not (Test-Path dist/TravauxApp.msi)) { Write-Error "TravauxApp.msi not found"; exit 1 }
+        shell: pwsh
+
       - name: Upload Windows artifact
         uses: actions/upload-artifact@v4
         with:
