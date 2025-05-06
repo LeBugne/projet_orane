@@ -80,7 +80,7 @@ jobs:
         run: |
           $exePath = Get-ChildItem -Path dist -Filter "*.exe" | Select-Object -First 1
           Write-Host "Running executable: $exePath"
-          & ".\dist\$exePath" | Tee-Object -FilePath "execution.log"
+          & $exePath.FullName | Tee-Object -FilePath "execution.log"
         shell: pwsh
 
       - name: Upload execution logs
