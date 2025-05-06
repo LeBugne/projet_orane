@@ -76,11 +76,25 @@ jobs:
             --win-console
         shell: pwsh
 
+      - name: Run the executable and capture logs
+        run: |
+          $exePath = Get-ChildItem -Path dist -Filter "*.exe" | Select-Object -First 1
+          Write-Host "Running executable: $exePath"
+          & ".\dist\$exePath" | Tee-Object -FilePath "execution.log"
+        shell: pwsh
+
+      - name: Upload execution logs
+        uses: actions/upload-artifact@v4
+        with:
+          name: Execution-Logs
+          path: execution.log
+
       - name: Upload Windows artifact
         uses: actions/upload-artifact@v4
         with:
           name: MonApp-windows
-          path: dist/*.exe
+          path: dist/*.
+
 
   release:
     needs: [build-linux, build-windows]
