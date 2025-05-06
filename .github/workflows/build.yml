@@ -97,7 +97,7 @@ jobs:
       - name: Build Windows executable with jpackage
         run: |
           jpackage `
-            --type exe `
+            --type msi `
             --input target `
             --dest dist `
             --name TravauxApp `
@@ -113,7 +113,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: MonApp-windows
-          path: dist/*.exe
+          path: dist/TravauxApp.msi
 
 
   release:
