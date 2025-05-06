@@ -19,7 +19,7 @@ public class Main extends Application {
     }
 
     public static void main(String[] args) {
-        System.out.println("Application JavaFX démarrée");
+        System.out.println(">> JavaFX démarre...");
         launch(args);
     }
 }
