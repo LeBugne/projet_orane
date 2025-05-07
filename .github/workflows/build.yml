@@ -112,7 +112,7 @@ jobs:
       - name: Verify MSI file
         run: |
           ls -l dist/
-          if (-Not (Test-Path dist/TravauxApp.msi)) { Write-Error "TravauxApp.msi not found"; exit 1 }
+          if (-Not (Test-Path dist/TravauxApp-1.0.msi)) { Write-Error "TravauxApp-1.0.msi not found"; exit 1 }
         shell: pwsh
 
       - name: Upload Windows artifact
