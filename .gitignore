@@ -3,9 +3,15 @@
 #Ignorer les scipt
 *.sh
 
+#Ignorer les images
+*.png
+
 # Ignorer le contenu du dossier /target (Maven)
 /target
 /verif
 
 # Ignorer les fichiers et dossiers .idea
 .idea/
+
+# Ignorer les diagrammes de classes
+/uml

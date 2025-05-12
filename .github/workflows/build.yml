@@ -100,7 +100,7 @@ jobs:
             --type msi `
             --input target `
             --dest dist `
-            --name TravauxApp `
+            --name Kifékoi? `
             --main-jar TravauxApp-1.0.jar `
             --main-class org.example.Main `
             --icon icon.ico `

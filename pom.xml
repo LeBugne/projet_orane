@@ -6,7 +6,7 @@
 
     <properties>
         <java.version>17</java.version>
-        <javafx.version>17.0.15</javafx.version>
+        <javafx.version>19.0.2.1</javafx.version>
         <main.class>org.example.Main</main.class>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
@@ -36,7 +36,6 @@
     </dependencies>
 
     <build>
-
         <resources>
             <resource>
                 <directory>src/main/resources</directory>

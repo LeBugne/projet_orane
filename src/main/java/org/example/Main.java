@@ -9,10 +9,7 @@ import javafx.stage.Stage;
 public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
-        System.out.println("JavaFX application starting...");
-        System.err.println("Initializing primary stage.");
         try {
-            System.out.println("Bienvenue ! Loading FXML...");
             FXMLLoader loader = new FXMLLoader(Main.class.getResource("/fxml/AccueilView.fxml"));
             Parent root = loader.load();
             primaryStage.setTitle("Gestion des Travaux");
@@ -27,13 +24,11 @@ public class Main extends Application {
     }
 
     public static void main(String[] args) {
-        System.out.println("Starting TravauxApp...");
-        System.err.println("Application entry point reached.");
         try {
             launch(args);
             System.out.println("JavaFX application launched.");
         } catch (Exception e) {
-            System.err.println("Error in main: " + e.getMessage());
+            System.out.println("Error in main: " + e.getMessage());
             e.printStackTrace();
         }
     }
