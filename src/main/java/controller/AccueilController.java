@@ -3,19 +3,24 @@ package controller;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.stage.Stage;
 
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ResourceBundle;
 
 public class AccueilController {
-    @FXML private TextField searchAccueil;
+    @FXML private TextField searchBar;
     @FXML private ComboBox<String> comboBox;
     @FXML private Label LabelTitre;
     @FXML private Button searchButton;
@@ -26,6 +31,24 @@ public class AccueilController {
 
     @FXML
     public void initialize() {
+
+        searchBar.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                try {
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/PropositionView.fxml"));
+                    Parent newViewRoot = loader.load();
+                    Stage stage = (Stage) searchButton.getScene().getWindow();
+                    Scene newScene = new Scene(newViewRoot);
+                    stage.setScene(newScene);
+                    stage.show();
+
+                }  catch (Exception e) {
+                    System.err.println("Erreur lors du changement de vue : " + e.getMessage());
+                    e.printStackTrace();
+                }
+            }
+        });
+
         try {
             String imagePath = "/images/loupe.png"; // Chemin relatif à src/main/resources
             // Vérifie si la ressource existe
@@ -46,15 +69,25 @@ public class AccueilController {
     }
 
     private void handleTextField(){
+
     }
 
     @FXML
     private void handleSearchButtonAction() {
-        String searchText = searchAccueil.getText();
-        System.out.println("Texte extraie : " + searchText);
-        searchButton.setOnAction(event -> {
-            System.out.println("test ");
-        });
+        String searchText = searchBar.getText();
+        try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/PropositionView.fxml"));
+                Parent newViewRoot = loader.load();
+                Stage stage = (Stage) searchButton.getScene().getWindow();
+                Scene newScene = new Scene(newViewRoot);
+                stage.setScene(newScene);
+                stage.show();
+
+            }  catch (Exception e) {
+                System.err.println("Erreur lors du changement de vue : " + e.getMessage());
+                e.printStackTrace();
+            }
+
     }
 
     @FXML

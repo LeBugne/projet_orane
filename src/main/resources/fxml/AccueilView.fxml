@@ -20,7 +20,7 @@
             </Label>
             <HBox prefHeight="34.0" prefWidth="442.0" spacing="5.0">
                <children>
-                  <TextField fx:id="searchAccueil" maxHeight="35.0" maxWidth="400.0" prefHeight="35.0" prefWidth="384.0" promptText="Saisir une adresse" />
+                  <TextField fx:id="searchBar" maxHeight="35.0" maxWidth="400.0" prefHeight="35.0" prefWidth="384.0" promptText="Saisir une adresse" />
                   <Button fx:id="searchButton" onAction="#handleSearchButtonAction" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="36.0" prefWidth="36.0"/>
                </children>
             </HBox>
