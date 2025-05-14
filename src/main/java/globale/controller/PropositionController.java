@@ -1,4 +1,4 @@
-package controller;
+package globale.controller;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;

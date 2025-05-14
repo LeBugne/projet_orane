@@ -1,10 +1,11 @@
+package globale.outils;
+
 import java.util.Random;
 public class FabriqueIdentifiant {
     private static FabriqueIdentifiant instance = new FabriqueIdentifiant();
     private int id_chiffre;
 
     public static FabriqueIdentifiant getInstance() {
-
         if (instance == null) {
             instance = new FabriqueIdentifiant();
         }
@@ -14,10 +15,9 @@ public class FabriqueIdentifiant {
     FabriqueIdentifiant() {
     }
 
-    public int getId_chiffre() {
-
+    public int getId() {
         Random rand = new Random();
-        return id_chiffre = rand.nextInt(100);
+        return id_chiffre = rand.nextInt(50000000);
     }
 
 }

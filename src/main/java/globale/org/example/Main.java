@@ -1,4 +1,4 @@
-package org.example;
+package globale.org.example;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;

@@ -1,3 +1,5 @@
+package globale.outils;
+
 public enum TypeChantier {
     GROS_OEUVRE("gros_oeuvre"),
     GAS("gas"),
