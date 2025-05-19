@@ -1,0 +1,10 @@
+.grid {
+   /* -fx-background-color: linear-gradient(to bottom right, #ff00ff, #00ffff);*/
+   -fx-background-color : #e6e6e6
+}
+
+.vignette {
+    -fx-background-color: #6c696c; /* Fond gris foncé */
+    -fx-background-radius: 10px;  /* Coins arrondis */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0.5, 2, 2);
+}

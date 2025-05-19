@@ -15,7 +15,6 @@ public class Main extends Application {
             primaryStage.setTitle("Gestion des Travaux");
             primaryStage.setScene(new Scene(root));
             primaryStage.show();
-            System.out.println("JavaFX window displayed.");
         } catch (Exception e) {
             System.err.println("Error loading application: " + e.getMessage());
             e.printStackTrace();

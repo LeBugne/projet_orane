@@ -1,31 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="617.0" prefWidth="1053.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="globale.controller.AccueilController">
-   <center>
-      <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="10.0" minWidth="200.0" prefHeight="226.0" prefWidth="471.0" spacing="30.0" BorderPane.alignment="CENTER">
+   <left>
+      <VBox fx:id="panelGauche" alignment="TOP_CENTER" prefHeight="617.0" prefWidth="468.0" spacing="10.0" BorderPane.alignment="CENTER">
+         <padding>
+            <Insets top="50.0" />
+         </padding>
          <children>
             <Label fx:id="LabelTitre" alignment="CENTER" prefHeight="47.0" prefWidth="196.0" text="KIFÉKOI ?" underline="true">
                <font>
                   <Font name="Yrsa SemiBold" size="35.0" />
                </font>
             </Label>
-            <HBox prefHeight="34.0" prefWidth="442.0" spacing="5.0">
+            <HBox fx:id="hBoxRecherche" alignment="CENTER" maxHeight="-Infinity" prefHeight="34.0" prefWidth="430.0" spacing="5.0">
                <children>
                   <TextField fx:id="searchBar" maxHeight="35.0" maxWidth="400.0" prefHeight="35.0" prefWidth="384.0" promptText="Saisir une adresse" />
-                  <Button fx:id="searchButton" onAction="#handleSearchButtonAction" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="36.0" prefWidth="36.0"/>
                </children>
+               <padding>
+                  <Insets left="10.0" />
+               </padding>
             </HBox>
-            <ComboBox fx:id="comboBox" accessibleRole="CONTEXT_MENU" prefHeight="24.0" prefWidth="175.0" promptText="Ajoutez une entrée" />
+            <Button fx:id="buttonEdition" mnemonicParsing="false" onAction="#handleButtonEdition" text="Edition" />
          </children>
       </VBox>
+   </left>
+   <center>
+      <HBox HBox.hgrow="ALWAYS" BorderPane.alignment="CENTER">
+         <children>
+            <ScrollPane fx:id="scrollPane" fitToWidth="true" fitToHeight="true" HBox.hgrow="ALWAYS">               <content>
+               <GridPane fx:id="grille" styleClass="grid" stylesheets="@/style.css">
+                    <columnConstraints>
+                       <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" />
+                    </columnConstraints>
+                  </GridPane>
+               </content>
+            </ScrollPane>
+         </children>
+      </HBox>
    </center>
 </BorderPane>

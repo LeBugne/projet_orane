@@ -1,100 +1,109 @@
 package globale.controller;
 
+import globale.Observateur;
+import globale.model.Chantier;
+import globale.model.Concessionaire;
+import globale.model.Travaux;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextField;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class AccueilController {
-    @FXML private TextField searchBar;
-    @FXML private ComboBox<String> comboBox;
+public class AccueilController implements Observateur {
     @FXML private Label LabelTitre;
-    @FXML private Button searchButton;
+    @FXML private TextField searchBar;
+    @FXML private Button buttonEdition;
+
+    /* -------------------- */
+    @FXML private ScrollPane scrollPane;
+    @FXML private GridPane grille;
+    private Travaux travaux ;
+
 
     public AccueilController(){
 
     }
 
     @FXML
-    public void initialize() {
+    public void initialize() throws IOException {
 
-        searchBar.setOnKeyPressed(event -> {
-            if (event.getCode() == KeyCode.ENTER) {
-                try {
-                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/PropositionView.fxml"));
-                    Parent newViewRoot = loader.load();
-                    Stage stage = (Stage) searchButton.getScene().getWindow();
-                    Scene newScene = new Scene(newViewRoot);
-                    stage.setScene(newScene);
-                    stage.show();
+        this.grille.getStyleClass().add("grid");
 
-                }  catch (Exception e) {
-                    System.err.println("Erreur lors du changement de vue : " + e.getMessage());
-                    e.printStackTrace();
-                }
+        this.travaux = new Travaux();
+
+        String[] noms = {"Veolia", "Kanye West", "EDF", "Bouygues", "Vinci", "Enedis" , "Kanye West", "EDF", "Bouygues", "Vinci", "Enedis"};
+        String adresse = "En bas de chez toi";
+        String date = "15/05/2025";
+
+        for (String nom : noms) {
+            Concessionaire c = new Concessionaire(nom);
+            Chantier chantier = new Chantier(c, date, adresse);
+            this.travaux.ajouterChantier(chantier);
+        }
+
+        System.out.println("Il y a " + this.travaux.arrayList.size() + " chantiers");
+
+        int col = 0;
+        int row = 0;
+
+        for (int i = 0; i < this.travaux.arrayList.size(); i++) {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/ItemView.fxml"));
+            AnchorPane anchorPane = fxmlLoader.load();
+
+            ItemController item = fxmlLoader.getController();
+            item.setData(this.travaux.arrayList.get(i));
+
+            // Passage à la ligne après 3 colonnes
+            if (col == 2) {
+                col = 0;
+                row++;
             }
-        });
 
-        try {
-            String imagePath = "/images/loupe.png"; // Chemin relatif à src/main/resources
-            // Vérifie si la ressource existe
-            if (getClass().getResource(imagePath) == null) {
-                System.err.println("Image not found at: " + imagePath);
-                throw new RuntimeException("Image not found: " + imagePath);
-            }
-            // Charge l'image directement avec l'URL
-            Image img = new Image(getClass().getResource(imagePath).toExternalForm());
-            ImageView imageView = new ImageView(img);
-            imageView.setFitHeight(32);
-            imageView.setFitWidth(32);
-            searchButton.setGraphic(imageView);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("Erreur lors du chargement de l'image", e);
+            this.grille.add(anchorPane, col++, row);
+            GridPane.setMargin(anchorPane,new Insets(20));
         }
     }
+
 
     private void handleTextField(){
-
     }
 
     @FXML
-    private void handleSearchButtonAction() {
-        String searchText = searchBar.getText();
+    private void handleButtonEdition(){
         try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/PropositionView.fxml"));
-                Parent newViewRoot = loader.load();
-                Stage stage = (Stage) searchButton.getScene().getWindow();
-                Scene newScene = new Scene(newViewRoot);
-                stage.setScene(newScene);
-                stage.show();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/EditionView.fxml"));
+            Parent newViewRoot = loader.load();
+            Stage stage = (Stage) buttonEdition.getScene().getWindow();
+            Scene newScene = new Scene(newViewRoot);
+            stage.setScene(newScene);
+            stage.show();
 
-            }  catch (Exception e) {
-                System.err.println("Erreur lors du changement de vue : " + e.getMessage());
-                e.printStackTrace();
-            }
-
+        }  catch (Exception e) {
+            System.err.println("Erreur lors du changement de vue : " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
-    @FXML
-    private void handleComboBoxSelection(ActionEvent event) {
-        String selectedCategory = comboBox.getValue();
-        if (selectedCategory != null) {
-            LabelTitre.setText("Catégorie sélectionnée : " + selectedCategory);
-        }
+
+    @Override
+    public void reagir() {
+        System.out.println("Je réagis ! ");
     }
 }
