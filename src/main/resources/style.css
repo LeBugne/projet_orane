@@ -4,7 +4,109 @@
 }
 
 .vignette {
-    -fx-background-color: #6c696c; /* Fond gris foncé */
+    -fx-background-color: #bf8b8b; /* Fond gris foncé */
     -fx-background-radius: 10px;  /* Coins arrondis */
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0.5, 2, 2);
+}
+
+.vignette:hover {
+    -fx-background-color: #e3a7a7;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.4), 15, 0.6, 3, 3);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+.text-field-red {
+    -fx-prompt-text-fill: rgba(215, 9, 9, 0.5); /* Rouge à 50% d'opacité */
+ }
+
+
+.text-field{
+     -fx-prompt-text-fill: rgba(0, 0, 0, 0.5); /* Rouge à 50% d'opacité */
+}
+
+.text-field:hover{
+    -fx-background-color: #e1d7d7;
+ }
+
+.button-19 {
+    -fx-background-color: #1899D6;
+    -fx-border-color: transparent;
+    -fx-border-radius: 16px;
+    -fx-border-width: 0 0 4px 0;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-family: "Arial"; /* Remplacer par "DIN Round" si disponible */
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-padding: 13px 16px;
+    -fx-alignment: center;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 10, 0.5, 2, 2);
+}
+
+.button-19:hover {
+    -fx-background-color: #07c68a;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.4), 15, 0.6, 3, 3);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+.button-19:after {
+  background-clip: padding-box;
+  background-color: #1CB0F6;
+  border: solid transparent;
+  border-radius: 16px;
+  border-width: 0 0 4px;
+  bottom: -4px;
+  content: "";
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: -1;
+}
+
+.button-19,
+.button-19:focus {
+  user-select: auto;
+}
+
+.button-19:hover:not(:disabled) {
+  filter: brightness(1.1);
+  -webkit-filter: brightness(1.1);
+}
+
+.button-19:disabled {
+  cursor: auto;
+}
+
+.button-19:active {
+  border-width: 4px 0 0;
+  background: none;
+}
+
+.round-button {
+    -fx-background-color: #0077FF; /* Couleur primaire */
+    -fx-background-radius: 50%; /* Rend le bouton rond */
+    -fx-min-width: 50px; /* Largeur minimale */
+    -fx-min-height: 50px; /* Hauteur minimale */
+    -fx-max-width: 50px; /* Largeur maximale */
+    -fx-max-height: 50px; /* Hauteur maximale */
+    -fx-text-fill: #FFFFFF; /* Couleur du texte ou icône */
+    -fx-font-family: "Helvetica, Arial, sans-serif";
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-alignment: center; /* Centrer le contenu */
+    -fx-cursor: hand; /* Curseur de pointeur */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 8, 0.4, 2, 2); /* Ombre portée */
+    -fx-border-color: transparent;
+    -fx-border-radius: 50%; /* Bordure ronde */
+}
+
+/* Effet au survol */
+.round-button:hover {
+    -fx-background-color: #1A8CFF; /* Couleur légèrement plus claire */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 12, 0.5, 3, 3); /* Ombre renforcée */
+    -fx-scale-x: 1.1; /* Mise à l'échelle de 10% */
+    -fx-scale-y: 1.1;
 }

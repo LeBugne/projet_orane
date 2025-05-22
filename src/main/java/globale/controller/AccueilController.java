@@ -3,6 +3,7 @@ package globale.controller;
 import globale.Observateur;
 import globale.model.Chantier;
 import globale.model.Concessionaire;
+import globale.model.SujetObserve;
 import globale.model.Travaux;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -36,8 +37,9 @@ public class AccueilController implements Observateur {
     @FXML private GridPane grille;
     private Travaux travaux ;
 
-
-    public AccueilController(){
+    public AccueilController(Travaux model){
+        this.travaux = model;
+        this.travaux.ajouterObservateur(this);
 
     }
 
@@ -46,9 +48,7 @@ public class AccueilController implements Observateur {
 
         this.grille.getStyleClass().add("grid");
 
-        this.travaux = new Travaux();
-
-        String[] noms = {"Veolia", "Kanye West", "EDF", "Bouygues", "Vinci", "Enedis" , "Kanye West", "EDF", "Bouygues", "Vinci", "Enedis"};
+        /*String[] noms = {"Veolia", "Kanye West", "EDF", "Bouygues", "Vinci", "Enedis" , "Kanye West", "EDF", "Bouygues", "Vinci", "Enedis"};
         String adresse = "En bas de chez toi";
         String date = "15/05/2025";
 
@@ -56,29 +56,31 @@ public class AccueilController implements Observateur {
             Concessionaire c = new Concessionaire(nom);
             Chantier chantier = new Chantier(c, date, adresse);
             this.travaux.ajouterChantier(chantier);
-        }
+        }*/
 
-        System.out.println("Il y a " + this.travaux.arrayList.size() + " chantiers");
+       // System.out.println("Il y a " + this.travaux.arrayList.size() + " chantiers");
 
         int col = 0;
         int row = 0;
+        if(this.travaux.arrayList.size() != 0){
+            for (int i = 0; i < this.travaux.arrayList.size(); i++) {
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/ItemView.fxml"));
+                AnchorPane anchorPane = fxmlLoader.load();
 
-        for (int i = 0; i < this.travaux.arrayList.size(); i++) {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/ItemView.fxml"));
-            AnchorPane anchorPane = fxmlLoader.load();
+                ItemController item = fxmlLoader.getController();
+                item.setData(this.travaux.arrayList.get(i));
 
-            ItemController item = fxmlLoader.getController();
-            item.setData(this.travaux.arrayList.get(i));
+                // Passage à la ligne après 3 colonnes
+                if (col == 2) {
+                    col = 0;
+                    row++;
+                }
 
-            // Passage à la ligne après 3 colonnes
-            if (col == 2) {
-                col = 0;
-                row++;
+                this.grille.add(anchorPane, col++, row);
+                GridPane.setMargin(anchorPane,new Insets(20));
             }
-
-            this.grille.add(anchorPane, col++, row);
-            GridPane.setMargin(anchorPane,new Insets(20));
         }
+
     }
 
 
@@ -86,24 +88,55 @@ public class AccueilController implements Observateur {
     }
 
     @FXML
-    private void handleButtonEdition(){
+    private void handleButtonEdition() {
         try {
+            // Créer le loader pour EditionView.fxml
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/EditionView.fxml"));
+            // Utiliser l'instance existante de EditionController
+            EditionController ec = ControllerManager.getInstance().getEditionController();
+            loader.setControllerFactory(param -> ec);
+            // Charger la vue
             Parent newViewRoot = loader.load();
+            // Obtenir le Stage actuel
             Stage stage = (Stage) buttonEdition.getScene().getWindow();
+            // Créer et définir la nouvelle scène
             Scene newScene = new Scene(newViewRoot);
             stage.setScene(newScene);
             stage.show();
-
-        }  catch (Exception e) {
+        } catch (IOException e) {
             System.err.println("Erreur lors du changement de vue : " + e.getMessage());
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * Si on ajoute un chantier une vignette dois s'ajouter
+     */
+    private void update() throws IOException {
+        int col = 0;
+        int row = 0;
+        if(this.travaux.arrayList.size() != 0){
+            for (int i = 0; i < this.travaux.arrayList.size(); i++) {
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/ItemView.fxml"));
+                AnchorPane anchorPane = fxmlLoader.load();
+
+                ItemController item = fxmlLoader.getController();
+                item.setData(this.travaux.arrayList.get(i));
+
+                // Passage à la ligne après 3 colonnes
+                if (col == 2) {
+                    col = 0;
+                    row++;
+                }
+
+                this.grille.add(anchorPane, col++, row);
+                GridPane.setMargin(anchorPane,new Insets(20));
+            }
         }
     }
 
 
     @Override
     public void reagir() {
-        System.out.println("Je réagis ! ");
     }
 }

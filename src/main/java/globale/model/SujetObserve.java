@@ -3,21 +3,24 @@ package globale.model;
 import globale.Observateur;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public abstract class SujetObserve {
-    private ArrayList<Observateur> arrayList = new ArrayList<>();
-    public SujetObserve(){
+public class SujetObserve {
+    private final ArrayList<Observateur> observateurs = new ArrayList<>();
 
+    public void ajouterObservateur(Observateur obs) {
+        if (!observateurs.contains(obs)) {
+            observateurs.add(obs);
+        }
     }
 
-    public void ajouterObservateur(Observateur obs){
-        this.arrayList.add(obs);
+    public void supprimerObservateur(Observateur obs) {
+        observateurs.remove(obs);
     }
 
-
-    public void notifyObservateur(){
-        for (Observateur o : this.arrayList) {
-            o.reagir();
+    public void notifierObservateurs() {
+        for (Observateur obs : observateurs) {
+            obs.reagir();
         }
     }
 }

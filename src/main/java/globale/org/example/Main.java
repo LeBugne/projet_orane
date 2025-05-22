@@ -1,5 +1,6 @@
 package globale.org.example;
 
+import globale.controller.ControllerManager;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -11,6 +12,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         try {
             FXMLLoader loader = new FXMLLoader(Main.class.getResource("/fxml/AccueilView.fxml"));
+            loader.setControllerFactory(param -> ControllerManager.getInstance().getAccueilController());
             Parent root = loader.load();
             primaryStage.setTitle("Gestion des Travaux");
             primaryStage.setScene(new Scene(root));

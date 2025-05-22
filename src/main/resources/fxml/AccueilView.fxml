@@ -9,12 +9,13 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="617.0" prefWidth="1053.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="globale.controller.AccueilController">
    <left>
-      <VBox fx:id="panelGauche" alignment="TOP_CENTER" prefHeight="617.0" prefWidth="468.0" spacing="10.0" BorderPane.alignment="CENTER">
+      <VBox fx:id="panelGauche" alignment="TOP_CENTER" prefHeight="510.0" prefWidth="468.0" spacing="20.0" BorderPane.alignment="CENTER">
          <padding>
             <Insets top="50.0" />
          </padding>
@@ -32,22 +33,35 @@
                   <Insets left="10.0" />
                </padding>
             </HBox>
-            <Button fx:id="buttonEdition" mnemonicParsing="false" onAction="#handleButtonEdition" text="Edition" />
+            <Button fx:id="buttonEdition" alignment="CENTER" mnemonicParsing="false" onAction="#handleButtonEdition" prefHeight="80.0" prefWidth="134.0" text="Edition" />
          </children>
       </VBox>
    </left>
    <center>
-      <HBox HBox.hgrow="ALWAYS" BorderPane.alignment="CENTER">
+      <VBox alignment="CENTER" BorderPane.alignment="CENTER">
          <children>
-            <ScrollPane fx:id="scrollPane" fitToWidth="true" fitToHeight="true" HBox.hgrow="ALWAYS">               <content>
+            <HBox alignment="CENTER" prefHeight="57.0" prefWidth="585.0">
+               <children>
+                  <Label alignment="CENTER" prefHeight="49.0" prefWidth="185.0" text="Votre collection">
+                     <font>
+                        <Font name="Monospaced Bold" size="13.0" />
+                     </font>
+                  </Label>
+                  <Button fx:id="edit" mnemonicParsing="false" text="edit" />
+               </children>
+            </HBox>
+            <ScrollPane fx:id="scrollPane" fitToHeight="true" fitToWidth="true" VBox.vgrow="ALWAYS">               <content>
                <GridPane fx:id="grille" styleClass="grid" stylesheets="@/style.css">
                     <columnConstraints>
-                       <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" />
+                       <ColumnConstraints minWidth="10.0" />
                     </columnConstraints>
+                     <rowConstraints>
+                        <RowConstraints />
+                     </rowConstraints>
                   </GridPane>
                </content>
             </ScrollPane>
          </children>
-      </HBox>
+      </VBox>
    </center>
 </BorderPane>

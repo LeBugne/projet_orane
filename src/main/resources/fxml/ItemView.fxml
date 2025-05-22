@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="251.0" prefWidth="201.0" styleClass="vignette" stylesheets="@/style.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="globale.controller.ItemController">
+<AnchorPane fx:id="racineItem" prefHeight="251.0" prefWidth="201.0" styleClass="vignette" stylesheets="@/style.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="globale.controller.ItemController">
    <children>
       <VBox alignment="CENTER" prefHeight="215.0" prefWidth="183.0">
          <children>
