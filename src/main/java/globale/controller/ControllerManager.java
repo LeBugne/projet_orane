@@ -6,6 +6,7 @@ public class ControllerManager {
     private static ControllerManager instance;
     private AccueilController accueilController;
     private EditionController editionController;
+    private DetailController detailController;
 
     private ControllerManager() {
     }
@@ -29,5 +30,12 @@ public class ControllerManager {
             editionController = new EditionController(Travaux.getInstance());
         }
         return editionController;
+    }
+
+    public DetailController getDetailController() {
+        if (detailController == null) {
+            detailController = new DetailController();
+        }
+        return detailController;
     }
 }

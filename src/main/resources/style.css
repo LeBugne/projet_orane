@@ -110,3 +110,31 @@
     -fx-scale-x: 1.1; /* Mise à l'échelle de 10% */
     -fx-scale-y: 1.1;
 }
+
+.bordered-hbox {
+    -fx-border-color: #C8CCD4; /* Couleur du contour */
+    -fx-border-width: 1px; /* Épaisseur du contour */
+    -fx-border-style: solid; /* Style de la bordure */
+    -fx-border-radius: 5px; /* Coins arrondis */
+    -fx-padding: 5px; /* Espacement intérieur */
+    -fx-background-color: transparent; /* Fond transparent pour ne styliser que le contour */
+}
+
+/* Optionnel : Effet au survol pour dynamisme */
+.bordered-hbox:hover {
+    -fx-border-color: #0077FF; /* Couleur primaire au survol */
+}
+
+/* Style de base pour les labels */
+.custom-label {
+    -fx-text-fill: #223254; /* Couleur du texte, cohérente avec vos TextField */
+    -fx-font-family: "Helvetica, Arial, sans-serif"; /* Police moderne */
+    -fx-font-size: 14px; /* Taille standard */
+    -fx-font-weight: normal; /* Poids normal */
+    -fx-padding: 5px; /* Espacement interne */
+    -fx-background-color: transparent; /* Fond transparent */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 3, 0.2, 1, 1); /* Ombre subtile */
+    -fx-alignment: center; /* Centrage du texte */
+    -fx-cursor: default; /* Curseur standard */
+}
+

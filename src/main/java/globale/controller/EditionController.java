@@ -9,14 +9,16 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -26,12 +28,24 @@ import java.util.regex.Pattern;
 public class EditionController implements Observateur {
     @FXML private TextField adrChantier;
     @FXML private Button buttonBack;
-    @FXML private Button crée;
+    @FXML private DatePicker calendrier;
     @FXML private TextField concessionnaire;
+    @FXML private Button crée;
+
+    /* ------------------------- */
+    @FXML private Button uploadButton;
+    @FXML private HBox cadrePhoto;
+    @FXML private ImageView img;
+    @FXML private Button next;
+    @FXML private Button prev;
+    @FXML private Label labelBas;
+    private ArrayList<Image> images = new ArrayList<>();
+    private int currentImageIndex = 0;
+
+    /* ------------------------- */
     @FXML private TextField responsable;
     @FXML private TextField tel;
     @FXML private TextField ville;
-    @FXML private DatePicker calendrier;
     private Travaux travaux;
 
 
@@ -61,12 +75,79 @@ public class EditionController implements Observateur {
         // Appliquer les animations
          crée.setOnMouseEntered(event -> fillIn.playFromStart());
          crée.setOnMouseExited(event -> fillOut.playFromStart());
+
+     /*  Image img1 = new Image(getClass().getResourceAsStream("/images/photo.png"));
+         Image img2 = new Image(getClass().getResourceAsStream("/images/star.jpg"));
+
+            try {
+                this.images.add(img1);
+                this.images.add(img2);
+                this.images()
+
+
+            } catch (Exception e) {
+                System.err.println("Erreur lors du chargement des images : " + e.getMessage());
+            }*/
+
+        // Mettre à jour l'affichage initial
+        updateImageDisplay();
     }
 
+    private void updateImageDisplay() {
+        if (images.isEmpty()) {
+            // Aucune image : afficher le bouton d'upload, cacher cadrePhoto
+            //img.setImage(null);
+            uploadButton.setVisible(true);
+            uploadButton.setManaged(true);
+       /*     cadrePhoto.setVisible(true);
+            cadrePhoto.setManaged(true);    */
+        } else {
+            // Images présentes : afficher l'image actuelle, montrer cadrePhoto, cacher uploadButton
+            img.setImage(images.get(currentImageIndex));
+            uploadButton.setVisible(false);
+            uploadButton.setManaged(false);
+            cadrePhoto.setVisible(true);
+            cadrePhoto.setManaged(true);
+            //On met à jour le label du bas
+            this.labelBas.setText((this.currentImageIndex + 1)+"/"+this.images.size());
+        }
+    }
+
+    @FXML
+    private void handleUploadImage() {
+        System.out.println("prout !");
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Choisir une image");
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Images", "*.png", "*.jpg", "*.jpeg")
+        );
+        File file = fileChooser.showOpenDialog(uploadButton.getScene().getWindow());
+        if (file != null) {
+            try {
+                Image uploadedImage = new Image(file.toURI().toString());
+                images.add(uploadedImage);
+                currentImageIndex = images.size() - 1;
+                updateImageDisplay();
+            } catch (Exception e) {
+                System.err.println("Erreur lors du chargement de l'image : " + e.getMessage());
+            }
+        }
+    }
+    @FXML
+    private void handlePreviousImage() {
+        if (images.isEmpty()) return;
+        currentImageIndex = (currentImageIndex - 1 + images.size()) % images.size();
+        updateImageDisplay();
+    }
+    @FXML
+    private void handleNextImage() {
+        if (images.isEmpty()) return;
+        currentImageIndex = (currentImageIndex + 1) % images.size();
+        updateImageDisplay();
+    }
     public void handleBackButton(){
         switchToAccueil();
     }
-
     @FXML
     public void handleAjoutezButton(){
         ArrayList<String> textFieldValues = new ArrayList<>();
@@ -105,19 +186,14 @@ public class EditionController implements Observateur {
         switchToAccueil();
 
     }
-
     public Chantier createChantier(Concessionaire c, String date, String adr){
         return new Chantier(c,date,adr);
     }
-
     @FXML
     public void handlePremierTextField(){
         String res = this.adrChantier.getText();
         this.adrChantier.clear();
-
-
     }
-
     public void switchToAccueil(){
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/AccueilView.fxml"));
@@ -137,8 +213,6 @@ public class EditionController implements Observateur {
             e.printStackTrace();
         }
     }
-
-
     @Override
     public void reagir() {
     }

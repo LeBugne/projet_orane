@@ -4,11 +4,16 @@ import globale.Observateur;
 import globale.model.Chantier;
 import globale.model.SujetObserve;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
+
+import java.io.IOException;
 
 public class ItemController implements Observateur {
     @FXML private AnchorPane racineItem;
@@ -24,13 +29,21 @@ public class ItemController implements Observateur {
     }
 
     private void handleVignetteClick(MouseEvent event) {
-        // Action à exécuter lors du clic
-        System.out.println("Vignette cliquée : " + (this.racineItem != null ? racineItem : labelItem.getText()));
-        // Exemple : Afficher une alerte
+        try {
+            FXMLLoader detailLoader = new FXMLLoader(getClass().getResource("/fxml/DetailView.fxml"));
+            detailLoader.setControllerFactory(param -> ControllerManager.getInstance().getDetailController());
+            Scene newScene = new Scene(detailLoader.load());
+            DetailController detailController = detailLoader.getController();
+            detailController.setData(chantier); // Passer les données
+            Stage stage = (Stage) this.racineItem.getScene().getWindow();
+            stage.setScene(newScene);
+            stage.show();
+        } catch (IOException e) {
+            System.err.println("Erreur lors de l'ouverture de DetailView : " + e.getMessage());
+            e.printStackTrace();
+        }
 
     }
-
-
     public void setData(Chantier c){
         this.chantier = c;
         this.labelItem.setText(this.chantier.getConcessionaire().getNom());

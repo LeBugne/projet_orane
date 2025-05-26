@@ -5,7 +5,7 @@
 
 #Ignorer les images
 *.png
-
+*.jpg
 # Ignorer le contenu du dossier /target (Maven)
 /target
 /verif

@@ -113,15 +113,34 @@ public class AccueilController implements Observateur {
      * Si on ajoute un chantier une vignette dois s'ajouter
      */
     private void update() throws IOException {
+        grille.getChildren().clear(); // Vider le GridPane avant de recréer
         int col = 0;
         int row = 0;
-        if(this.travaux.arrayList.size() != 0){
+        if (!this.travaux.arrayList.isEmpty()) {
             for (int i = 0; i < this.travaux.arrayList.size(); i++) {
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/ItemView.fxml"));
                 AnchorPane anchorPane = fxmlLoader.load();
 
                 ItemController item = fxmlLoader.getController();
-                item.setData(this.travaux.arrayList.get(i));
+                Chantier chantier = this.travaux.arrayList.get(i);
+                item.setData(chantier);
+
+                // Ajouter un gestionnaire de clic pour ouvrir DetailView
+                anchorPane.setOnMouseClicked(event -> {
+                    try {
+                        FXMLLoader detailLoader = new FXMLLoader(getClass().getResource("/fxml/DetailView.fxml"));
+                        detailLoader.setController(ControllerManager.getInstance().getDetailController());
+                        Scene newScene = new Scene(detailLoader.load());
+                        DetailController detailController = detailLoader.getController();
+                        detailController.setData(chantier); // Passer les données
+                        Stage stage = (Stage) anchorPane.getScene().getWindow();
+                        stage.setScene(newScene);
+                        stage.show();
+                    } catch (IOException e) {
+                        System.err.println("Erreur lors de l'ouverture de DetailView : " + e.getMessage());
+                        e.printStackTrace();
+                    }
+                });
 
                 // Passage à la ligne après 3 colonnes
                 if (col == 2) {
@@ -129,8 +148,8 @@ public class AccueilController implements Observateur {
                     row++;
                 }
 
-                this.grille.add(anchorPane, col++, row);
-                GridPane.setMargin(anchorPane,new Insets(20));
+                grille.add(anchorPane, col++, row);
+                GridPane.setMargin(anchorPane, new Insets(20));
             }
         }
     }
