@@ -5,6 +5,7 @@ import globale.model.Chantier;
 import globale.model.Concessionaire;
 import globale.model.Travaux;
 import javafx.animation.FillTransition;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -13,6 +14,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -20,19 +22,23 @@ import javafx.util.Duration;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
 public class EditionController implements Observateur {
-    @FXML private TextField adrChantier;
     @FXML private Button buttonBack;
-    @FXML private DatePicker calendrier;
-    @FXML private TextField concessionnaire;
+
     @FXML private Button crée;
 
     /* ------------------------- */
+    @FXML private Label titreImg;
+    @FXML private StackPane stackPane;
     @FXML private Button uploadButton;
     @FXML private HBox cadrePhoto;
     @FXML private ImageView img;
@@ -43,10 +49,14 @@ public class EditionController implements Observateur {
     private int currentImageIndex = 0;
 
     /* ------------------------- */
+    @FXML private TextField adrChantier;
+    @FXML private DatePicker calendrier;
+    @FXML private TextField concessionnaire;
     @FXML private TextField responsable;
     @FXML private TextField tel;
     @FXML private TextField ville;
     private Travaux travaux;
+    private ArrayList<File> arrayListFile = new ArrayList<>();
 
 
     private static final Pattern EMAIL_PATTERN = Pattern.compile(
@@ -73,21 +83,8 @@ public class EditionController implements Observateur {
         fillOut.setToValue(Color.web("#1899D6")); // Couleur initiale
 
         // Appliquer les animations
-         crée.setOnMouseEntered(event -> fillIn.playFromStart());
-         crée.setOnMouseExited(event -> fillOut.playFromStart());
-
-     /*  Image img1 = new Image(getClass().getResourceAsStream("/images/photo.png"));
-         Image img2 = new Image(getClass().getResourceAsStream("/images/star.jpg"));
-
-            try {
-                this.images.add(img1);
-                this.images.add(img2);
-                this.images()
-
-
-            } catch (Exception e) {
-                System.err.println("Erreur lors du chargement des images : " + e.getMessage());
-            }*/
+        crée.setOnMouseEntered(event -> fillIn.playFromStart());
+        crée.setOnMouseExited(event -> fillOut.playFromStart());
 
         // Mettre à jour l'affichage initial
         updateImageDisplay();
@@ -99,38 +96,69 @@ public class EditionController implements Observateur {
             //img.setImage(null);
             uploadButton.setVisible(true);
             uploadButton.setManaged(true);
-       /*     cadrePhoto.setVisible(true);
-            cadrePhoto.setManaged(true);    */
         } else {
             // Images présentes : afficher l'image actuelle, montrer cadrePhoto, cacher uploadButton
+            this.img.setPickOnBounds(true);
             img.setImage(images.get(currentImageIndex));
             uploadButton.setVisible(false);
             uploadButton.setManaged(false);
             cadrePhoto.setVisible(true);
             cadrePhoto.setManaged(true);
             //On met à jour le label du bas
-            this.labelBas.setText((this.currentImageIndex + 1)+"/"+this.images.size());
         }
+        this.labelBas.setText((this.currentImageIndex + 1 )+"/3");
+
     }
 
     @FXML
-    private void handleUploadImage() {
-        System.out.println("prout !");
+    private void handleUploadImage(ActionEvent event) throws URISyntaxException {
+        // Créer un FileChooser pour sélectionner une image
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Choisir une image");
+        fileChooser.setTitle("Sélectionner une image");
+        // Filtrer pour n'afficher que les fichiers image
         fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("Images", "*.png", "*.jpg", "*.jpeg")
+                new FileChooser.ExtensionFilter("Images", "*.png", "*.jpg", "*.jpeg", "*.gif")
         );
-        File file = fileChooser.showOpenDialog(uploadButton.getScene().getWindow());
-        if (file != null) {
-            try {
-                Image uploadedImage = new Image(file.toURI().toString());
-                images.add(uploadedImage);
-                currentImageIndex = images.size() - 1;
-                updateImageDisplay();
-            } catch (Exception e) {
-                System.err.println("Erreur lors du chargement de l'image : " + e.getMessage());
-            }
+
+        // Afficher la boîte de dialogue et récupérer le fichier sélectionné
+        File selectedFile = fileChooser.showOpenDialog(img.getScene().getWindow());
+        if (selectedFile != null) {
+            // Convertir le fichier en URL pour l'ImageView
+            String imagePath = selectedFile.toURI().toString();
+            //System.out.println("chemin capturé :" + imagePath);
+            Image image = new Image(imagePath);
+            img.setImage(image);
+            this.images.add(image);
+
+            // Stocker le chemin de l'image (ou une autre référence, voir ci-dessous)
+            storeImagePath(imagePath);
+        }
+    }
+
+    /**
+     * Cette fonction est utile pour ne pas dépendre du chemin absolu d'une image
+     * @param imagePath
+     */
+    private void storeImagePath(String imagePath) throws URISyntaxException {
+        File sourceFile = new File(new URI(imagePath));
+
+        // Dossier externe : ~/myapp/images
+        String userHome = System.getProperty("user.home");
+        File targetDir = new File(userHome, "myapp/images");
+        if (!targetDir.exists()) {
+            targetDir.mkdirs();
+        }
+
+        File targetFile = new File(targetDir, sourceFile.getName());
+        this.arrayListFile.add(targetFile);
+
+        try {
+            Files.copy(sourceFile.toPath(), targetFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            String relativePath = "images/" + sourceFile.getName();
+            //System.out.println("Image copiée et stockée : " + relativePath);
+            // Stocker relativePath dans une base de données ou une liste
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
     @FXML
@@ -153,6 +181,9 @@ public class EditionController implements Observateur {
         ArrayList<String> textFieldValues = new ArrayList<>();
         String adrChantier = this.adrChantier.getText().trim();
         String conce = this.concessionnaire.getText().trim();
+        String tel = this.tel.getText().trim();
+        String responsable = this.responsable.getText().trim();
+        String ville = this.ville.getText().trim();
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
 
         // Vérifier si le contenu du searchBar correspond à une adresse e-mail
@@ -177,14 +208,23 @@ public class EditionController implements Observateur {
         String dateString = selectedDate.format(formatter);
 
         Concessionaire c = new Concessionaire(conce);
+
         Chantier creation = createChantier(c,dateString,adrChantier);
+        creation.setVille(ville);
+        creation.setResponsable(responsable);
+        creation.setTelephone(tel);
+
+        for(File f : this.arrayListFile){
+            Image i = new Image(f.toURI().toString());
+            creation.ajouterImg(i);
+        }
+
         Travaux.getInstance().ajouterChantier(creation);
 
         // Ajouter la valeur si valide
         textFieldValues.add(adrChantier);
 
         switchToAccueil();
-
     }
     public Chantier createChantier(Concessionaire c, String date, String adr){
         return new Chantier(c,date,adr);
@@ -192,7 +232,6 @@ public class EditionController implements Observateur {
     @FXML
     public void handlePremierTextField(){
         String res = this.adrChantier.getText();
-        this.adrChantier.clear();
     }
     public void switchToAccueil(){
         try {
@@ -216,4 +255,7 @@ public class EditionController implements Observateur {
     @Override
     public void reagir() {
     }
+
+    public void ajouterFile(File f){ this.arrayListFile.add(f); }
+
 }

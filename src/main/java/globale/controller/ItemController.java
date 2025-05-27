@@ -2,7 +2,6 @@ package globale.controller;
 
 import globale.Observateur;
 import globale.model.Chantier;
-import globale.model.SujetObserve;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -34,7 +33,8 @@ public class ItemController implements Observateur {
             detailLoader.setControllerFactory(param -> ControllerManager.getInstance().getDetailController());
             Scene newScene = new Scene(detailLoader.load());
             DetailController detailController = detailLoader.getController();
-            detailController.setData(chantier); // Passer les données
+          /*  System.out.println("setChantier va se faire");
+            detailController.setChantier(chantier);*/ // Passer les données
             Stage stage = (Stage) this.racineItem.getScene().getWindow();
             stage.setScene(newScene);
             stage.show();
@@ -42,7 +42,6 @@ public class ItemController implements Observateur {
             System.err.println("Erreur lors de l'ouverture de DetailView : " + e.getMessage());
             e.printStackTrace();
         }
-
     }
     public void setData(Chantier c){
         this.chantier = c;

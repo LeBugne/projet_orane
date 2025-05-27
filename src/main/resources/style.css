@@ -29,7 +29,7 @@
     -fx-background-color: #e1d7d7;
  }
 
-.button-19 {
+.boutton-bleu {
     -fx-background-color: #1899D6;
     -fx-border-color: transparent;
     -fx-border-radius: 16px;
@@ -44,14 +44,14 @@
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 10, 0.5, 2, 2);
 }
 
-.button-19:hover {
+.boutton-bleu:hover {
     -fx-background-color: #07c68a;
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.4), 15, 0.6, 3, 3);
     -fx-scale-x: 1.05;
     -fx-scale-y: 1.05;
 }
 
-.button-19:after {
+.boutton-bleu:after {
   background-clip: padding-box;
   background-color: #1CB0F6;
   border: solid transparent;
@@ -66,21 +66,21 @@
   z-index: -1;
 }
 
-.button-19,
-.button-19:focus {
+.boutton-bleu,
+.boutton-bleu:focus {
   user-select: auto;
 }
 
-.button-19:hover:not(:disabled) {
+.boutton-bleu:hover:not(:disabled) {
   filter: brightness(1.1);
   -webkit-filter: brightness(1.1);
 }
 
-.button-19:disabled {
+.boutton-bleu:disabled {
   cursor: auto;
 }
 
-.button-19:active {
+.boutton-bleu:active {
   border-width: 4px 0 0;
   background: none;
 }
@@ -138,3 +138,40 @@
     -fx-cursor: default; /* Curseur standard */
 }
 
+.image-view-border {
+    -fx-border-color: red;
+    -fx-border-width: 3px;
+    -fx-border-radius : 5px;
+    -fx-padding: 5px;
+    -fx-background-color: transparent;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5,0,0,0);
+    -fx-transition: all 0.3 ease-in-out;
+}
+
+.image-view-border:hover {
+    -fx-border-color: blue;
+    -fx-border-width: 4px;
+    -fx-border-radius: 10px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5),10,0.5,0,0);
+}
+
+.style-label{
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: linear-gradient(to right, #6a11cb, #2575fc);
+    -fx-background-color: white;
+    -fx-padding : 8px 12px;
+    -fx-background-radius: 10px;
+    -fx-border-color: #2575fc;
+    -fx-border-width: 2px;
+    -fx-effect: dropshadow(gaussian,rgba(0,0,0,0.15),4,0.3,0,2);
+    -fx-transition: all 0.3s ease-in-out;
+}
+
+.styled-vbox{
+    -fx-border-color: rgba(108,140,171,0.3);
+    -fx-border-width: 3px;
+    -fx-border-radius: 10px;
+    -fx-background-color: rgba(108,140,171,0.5);
+    -fx-padding: 10px;
+}

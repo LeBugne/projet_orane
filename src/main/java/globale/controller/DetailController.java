@@ -12,6 +12,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
+import javax.imageio.ImageReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -19,6 +20,9 @@ public class DetailController {
 
     @FXML private Button buttonAccueil;
     @FXML private HBox cadrePhoto;
+    @FXML private Label titreImg;
+
+    /* ------------------------------ */
     @FXML private Label labelAdresse;
     @FXML private Label labelConcessionaire;
     @FXML private Label labelDate;
@@ -26,30 +30,54 @@ public class DetailController {
     @FXML private Label labelTel;
     @FXML private Label labelVille;
     @FXML private VBox listeInfo;
+
+    @FXML private Label res1;
+    @FXML private Label res2;
+    @FXML private Label res3;
+    @FXML private Label res4;
+    @FXML private Label res5;
+    @FXML private Label res6;
+
+    /* ------------------------------ */
     @FXML private HBox topHbox;
     @FXML private ImageView img;
     @FXML private Label labelBas;
     private ArrayList<Image> images = new ArrayList<>();
     private int currentImageIndex = 0;
-
+    private Chantier chantier;
 
     @FXML
     public void initialize(){
+
+        this.res1.setText(this.chantier.getDate().toString());
+        this.res2.setText(this.chantier.getAdresse());
+        this.res3.setText(this.chantier.getConcessionaire().getNom());
+
+        if(this.chantier.getVille() != null){
+            this.res4.setText(this.chantier.getVille());
+        }
+
+        if(this.chantier.getTelephone() != null){
+            this.res5.setText(this.chantier.getTelephone());
+        }
+
+        if(this.chantier.getResponsable() != null){
+            this.res6.setText(this.chantier.getResponsable());
+        }
+
         try {
-            images.add(new Image(getClass().getResourceAsStream("/images/photo.png")));
-            images.add(new Image(getClass().getResourceAsStream("/images/star.jpg")));
-            images.add(new Image(getClass().getResourceAsStream("/images/photo.png")));
+            for(Image i : this.chantier.getArrayListImage()){
+                images.add(i);
+            }
         } catch (Exception e) {
             System.err.println("Erreur lors du chargement des images : " + e.getMessage());
         }
 
-        // Mettre à jour l'affichage initial
         updateImageDisplay();
-    }
 
-    public void setData(Chantier chantier) {
-        labelConcessionaire.setText("Nom: " + chantier.getConcessionaire().getNom());
-        labelAdresse.setText("Adresse: " + chantier.getAdresse());
+    }
+    public void setChantier(Chantier c) {
+        this.chantier = c;
     }
 
 
@@ -83,13 +111,13 @@ public class DetailController {
         updateImageDisplay();
     }
     @FXML
-    private void handleNextImage() {
+    public void handleNextImage() {
         if (images.isEmpty()) return;
         currentImageIndex = (currentImageIndex + 1) % images.size();
         updateImageDisplay();
     }
 
-    private void updateImageDisplay() {
+    public void updateImageDisplay() {
         if (images.isEmpty()) {
             // Aucune image : afficher le bouton d'upload, cacher cadrePhoto
             img.setImage(null);
@@ -104,4 +132,15 @@ public class DetailController {
             this.labelBas.setText((this.currentImageIndex + 1)+"/"+this.images.size());
         }
     }
+
+    public void setTitreImg(){
+        if(this.currentImageIndex == 1){
+            this.titreImg.setText("Arrếté");
+        } else if (this.currentImageIndex == 2) {
+            this.titreImg.setText("");
+        }
+    }
+
+
+
 }

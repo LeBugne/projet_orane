@@ -8,34 +8,65 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="632.0" prefWidth="1053.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="globale.controller.DetailController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="656.0" prefWidth="1053.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="globale.controller.DetailController">
    <right>
-      <VBox fx:id="listeInfo" alignment="TOP_CENTER" prefHeight="467.0" prefWidth="298.0" spacing="50.0" BorderPane.alignment="CENTER">
+      <VBox fx:id="listeInfo" alignment="TOP_CENTER" prefHeight="552.0" prefWidth="298.0" spacing="25.0" BorderPane.alignment="CENTER">
          <BorderPane.margin>
             <Insets left="30.0" right="30.0" />
          </BorderPane.margin>
          <children>
-            <Label fx:id="labelDate" text="Date du chantier" />
-            <Label fx:id="labelAdresse" text="Adresse" />
-            <Label fx:id="labelConcessionaire" text="Concessionaire" />
-            <Label fx:id="labelVille" text="Ville" />
-            <Label fx:id="labelTel" text="Téléphone" />
-            <Label fx:id="labelResp" text="Responsable" />
+            <VBox alignment="CENTER" prefHeight="45.0" prefWidth="298.0" spacing="10.0" styleClass="styled-vbox" stylesheets="@../style.css">
+               <children>
+                  <Label fx:id="labelDate" stylesheets="@../style.css" text="Date du chantier" underline="true" />
+                  <Label fx:id="res1" text="Label" />
+               </children>
+            </VBox>
+            <VBox alignment="CENTER" prefHeight="39.0" prefWidth="298.0" spacing="10.0" styleClass="styled-vbox" stylesheets="@../style.css">
+               <children>
+                  <Label fx:id="labelAdresse" stylesheets="@../style.css" text="Adresse" underline="true" />
+                  <Label fx:id="res2" text="Label" />
+               </children>
+            </VBox>
+            <VBox alignment="CENTER" prefHeight="64.0" prefWidth="298.0" spacing="10.0" styleClass="styled-vbox" stylesheets="@../style.css">
+               <children>
+                  <Label fx:id="labelConcessionaire" stylesheets="@../style.css" text="Concessionaire" underline="true" />
+                  <Label fx:id="res3" text="Label" />
+               </children>
+            </VBox>
+            <VBox alignment="CENTER" prefHeight="55.0" prefWidth="298.0" spacing="10.0" styleClass="styled-vbox" stylesheets="@../style.css">
+               <children>
+                  <Label fx:id="labelVille" text="Ville" underline="true" />
+                  <Label fx:id="res4" text="Label" />
+               </children>
+            </VBox>
+            <VBox alignment="CENTER" prefHeight="54.0" prefWidth="298.0" spacing="10.0" styleClass="styled-vbox" stylesheets="@../style.css">
+               <children>
+                  <Label fx:id="labelTel" text="Téléphone" underline="true" />
+                  <Label fx:id="res5" text="Label" />
+               </children>
+            </VBox>
+            <VBox alignment="CENTER" prefHeight="36.0" prefWidth="298.0" spacing="10.0" styleClass="styled-vbox" stylesheets="@../style.css">
+               <children>
+                  <Label fx:id="labelResp" text="Responsable" underline="true" />
+                  <Label fx:id="res6" text="Label" />
+               </children>
+            </VBox>
          </children>
          <opaqueInsets>
             <Insets />
          </opaqueInsets>
          <padding>
-            <Insets top="60.0" />
+            <Insets top="30.0" />
          </padding></VBox>
    </right>
    <center>
-      <HBox fx:id="cadrePhoto" alignment="CENTER" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+      <HBox fx:id="cadrePhoto" alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0" BorderPane.alignment="CENTER">
          <children>
             <Button mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" text="P" />
-            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="10.0" stylesheets="@../style.css">
                <children>
-                  <ImageView fx:id="img" fitHeight="523.0" fitWidth="507.0" pickOnBounds="true" preserveRatio="true" />
+                  <Label fx:id="titreImg" styleClass="style-label" stylesheets="@../style.css" text="Titre" />
+                  <ImageView fx:id="img" fitHeight="523.0" fitWidth="507.0" pickOnBounds="true" preserveRatio="true" styleClass="image-view-border" />
                   <Label fx:id="labelBas" text="Label" />
                </children>
             </VBox>
