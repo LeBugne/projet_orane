@@ -28,25 +28,30 @@ import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.regex.Pattern;
 
 public class EditionController implements Observateur {
     @FXML private Button buttonBack;
-
     @FXML private Button crée;
 
     /* ------------------------- */
-    @FXML private Label titreImg;
     @FXML private StackPane stackPane;
     @FXML private Button uploadButton;
     @FXML private HBox cadrePhoto;
+    @FXML private Button deletePhoto;
     @FXML private ImageView img;
-    @FXML private Button next;
-    @FXML private Button prev;
-    @FXML private Label labelBas;
-    private ArrayList<Image> images = new ArrayList<>();
-    private int currentImageIndex = 0;
+    @FXML private HBox choixImage;
+    @FXML private RadioButton radio1;
+    @FXML private RadioButton radioDT;
+    @FXML private RadioButton radioIPT;
+
+    /* --------------------------- */
+    @FXML private Map<String, Image> imagesByCategory = new HashMap<>();
+    ToggleGroup toggleGroup = new ToggleGroup(); // ça permet de séléctionnez un unique bouton à la fois
+
+    private final List<RadioButton> radioButtons = Arrays.asList(radio1, radioIPT, radioDT);
+    private String currentCategory = null;
 
     /* ------------------------- */
     @FXML private TextField adrChantier;
@@ -73,67 +78,72 @@ public class EditionController implements Observateur {
     }
 
     @FXML
-    public void initialize(){
-        // Animation pour le survol
-        FillTransition fillIn = new FillTransition(Duration.millis(100), this.crée.getShape());
-        fillIn.setToValue(Color.web("#07c68a")); // Couleur cible
+    private void initialize() {
+        // Associer les radio buttons à des catégories
+        radio1.setUserData("Arrêté");
+        radioIPT.setUserData("IPT");
+        radioDT.setUserData("DT/DICT");
 
-        // Animation pour la sortie
-        FillTransition fillOut = new FillTransition(Duration.millis(200), this.crée.getShape());
-        fillOut.setToValue(Color.web("#1899D6")); // Couleur initiale
+        radio1.setToggleGroup(toggleGroup);
+        radioIPT.setToggleGroup(toggleGroup);
+        radioDT.setToggleGroup(toggleGroup);
 
-        // Appliquer les animations
-        crée.setOnMouseEntered(event -> fillIn.playFromStart());
-        crée.setOnMouseExited(event -> fillOut.playFromStart());
+        // Écouter les changements de sélection des radio buttons
+        // C'est cette portion qui gère le changement d'image
+        toggleGroup.selectedToggleProperty().addListener((obs, oldToggle, newToggle) -> {
+            if (newToggle != null) {
+                currentCategory = (String) newToggle.getUserData();
+                updateImageView();
+            }
+        });
 
-        // Mettre à jour l'affichage initial
-        updateImageDisplay();
+        // Sélectionner un radio button par défaut (optionnel)
+        radio1.setSelected(true);
+        currentCategory = "Arrêté";
+        updateImageView();
     }
+    private void updateImageView() {
+        // Réinitialiser l'ImageView et les boutons
+        img.setImage(null);
+        uploadButton.setVisible(true);
+        uploadButton.setManaged(true);
+        deletePhoto.setVisible(false);
+        deletePhoto.setManaged(false);
 
-    private void updateImageDisplay() {
-        if (images.isEmpty()) {
-            // Aucune image : afficher le bouton d'upload, cacher cadrePhoto
-            //img.setImage(null);
-            uploadButton.setVisible(true);
-            uploadButton.setManaged(true);
-        } else {
-            // Images présentes : afficher l'image actuelle, montrer cadrePhoto, cacher uploadButton
-            this.img.setPickOnBounds(true);
-            img.setImage(images.get(currentImageIndex));
-            uploadButton.setVisible(false);
-            uploadButton.setManaged(false);
-            cadrePhoto.setVisible(true);
-            cadrePhoto.setManaged(true);
-            //On met à jour le label du bas
+        // Si une catégorie est sélectionnée, vérifier si elle a une image
+        if (currentCategory != null) {
+            Image image = imagesByCategory.get(currentCategory);
+            if (image != null) {
+                img.setImage(image);
+                uploadButton.setVisible(false); // Cacher le bouton Upload si une image existe
+                uploadButton.setManaged(false);
+                deletePhoto.setVisible(true); // Afficher le bouton de suppression
+                deletePhoto.setManaged(true);
+            }
         }
-        this.labelBas.setText((this.currentImageIndex + 1 )+"/3");
-
     }
-
     @FXML
-    private void handleUploadImage(ActionEvent event) throws URISyntaxException {
-        // Créer un FileChooser pour sélectionner une image
+    private void handleUploadImage() throws URISyntaxException {
+        if (currentCategory == null) {
+            System.out.println("Aucune catégorie sélectionnée.");
+            return;
+        }
+
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Sélectionner une image");
-        // Filtrer pour n'afficher que les fichiers image
-        fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("Images", "*.png", "*.jpg", "*.jpeg", "*.gif")
+        fileChooser.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg")
         );
+        File file = fileChooser.showOpenDialog(null);
 
-        // Afficher la boîte de dialogue et récupérer le fichier sélectionné
-        File selectedFile = fileChooser.showOpenDialog(img.getScene().getWindow());
-        if (selectedFile != null) {
-            // Convertir le fichier en URL pour l'ImageView
-            String imagePath = selectedFile.toURI().toString();
-            //System.out.println("chemin capturé :" + imagePath);
-            Image image = new Image(imagePath);
-            img.setImage(image);
-            this.images.add(image);
-
-            // Stocker le chemin de l'image (ou une autre référence, voir ci-dessous)
+        if (file != null) {
+            String imagePath = file.toURI().toString();
             storeImagePath(imagePath);
+            Image image = new Image(imagePath);
+            imagesByCategory.put(currentCategory, image); // Associer l'image à la catégorie
+            updateImageView(); // Mettre à jour l'affichage
         }
     }
+
 
     /**
      * Cette fonction est utile pour ne pas dépendre du chemin absolu d'une image
@@ -161,23 +171,13 @@ public class EditionController implements Observateur {
             e.printStackTrace();
         }
     }
+    public void handleBackButton(){ switchToAccueil(); }
+
+    /**
+     * Lorsque l'on appuiera sur le bouton Ajoutez voici tout ce qui se passera.
+     */
     @FXML
-    private void handlePreviousImage() {
-        if (images.isEmpty()) return;
-        currentImageIndex = (currentImageIndex - 1 + images.size()) % images.size();
-        updateImageDisplay();
-    }
-    @FXML
-    private void handleNextImage() {
-        if (images.isEmpty()) return;
-        currentImageIndex = (currentImageIndex + 1) % images.size();
-        updateImageDisplay();
-    }
-    public void handleBackButton(){
-        switchToAccueil();
-    }
-    @FXML
-    public void handleAjoutezButton(){
+    public void handleAjoutezButton() throws IOException {
         ArrayList<String> textFieldValues = new ArrayList<>();
         String adrChantier = this.adrChantier.getText().trim();
         String conce = this.concessionnaire.getText().trim();
@@ -214,26 +214,32 @@ public class EditionController implements Observateur {
         creation.setResponsable(responsable);
         creation.setTelephone(tel);
 
-        for(File f : this.arrayListFile){
+/*     for(File f : this.arrayListFile){
             Image i = new Image(f.toURI().toString());
+            System.out.println("file"+i.getUrl());
             creation.ajouterImg(i);
-        }
+        }*/
+
+        /* Ici on verse les images chargé, dans l'objet du modèle (Chantier) qui permet de garder en mémoire les images */
+        creation.getImagesByCategory().putAll(this.imagesByCategory);
 
         Travaux.getInstance().ajouterChantier(creation);
+        Travaux.getInstance().ajouterChantier(creation.getId(),creation);
 
         // Ajouter la valeur si valide
         textFieldValues.add(adrChantier);
+        clearImages();
 
         switchToAccueil();
     }
     public Chantier createChantier(Concessionaire c, String date, String adr){
         return new Chantier(c,date,adr);
     }
-    @FXML
-    public void handlePremierTextField(){
+    @FXML public void handlePremierTextField(){
         String res = this.adrChantier.getText();
     }
     public void switchToAccueil(){
+        clearImages();
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/AccueilView.fxml"));
 
@@ -252,10 +258,19 @@ public class EditionController implements Observateur {
             e.printStackTrace();
         }
     }
+    @FXML
+    private void handleDeleteImage() {
+        if (currentCategory != null) {
+            imagesByCategory.remove(currentCategory); // Supprimer l'image de la catégorie
+            updateImageView(); // Mettre à jour l'affichage
+        }
+    }
+    public void clearImages(){
+        this.imagesByCategory.clear();
+    }
     @Override
     public void reagir() {
     }
 
-    public void ajouterFile(File f){ this.arrayListFile.add(f); }
 
 }

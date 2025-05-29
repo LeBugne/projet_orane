@@ -8,6 +8,9 @@ import java.io.File;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Chantier {
     private Concessionaire concessionaire;
@@ -19,7 +22,7 @@ public class Chantier {
     private int id;
     private Arrete arrete;
     private ArrayList<Image> arrayListFile = new ArrayList<>();
-
+    private Map<String, Image> imagesByCategory = new HashMap<>();
     public Chantier(Concessionaire c, String date, String adr){
         this.concessionaire = c;
         DateTimeFormatter df = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -29,27 +32,21 @@ public class Chantier {
         FabriqueIdentifiant fi = FabriqueIdentifiant.getInstance();
         this.id = fi.getId();
     }
-
     public String getTelephone() {
         return telephone;
     }
-
     public void setTelephone(String telephone) {
         this.telephone = telephone;
     }
-
     public String getVille() {
         return ville;
     }
-
     public void setVille(String ville) {
         this.ville = ville;
     }
-
     public String getResponsable() {
         return responsable;
     }
-
     public void setResponsable(String responsable) {
         this.responsable = responsable;
     }
@@ -77,7 +74,6 @@ public class Chantier {
     public void setArrayListFile(ArrayList<Image> arrayListFile) {
         this.arrayListFile = arrayListFile;
     }
-
     public int getId(){
         return this.id;
     }
@@ -87,16 +83,21 @@ public class Chantier {
     public String getAdresse(){
         return this.adresse;
     }
-
     public Concessionaire getConcessionaire(){
         return this.concessionaire;
     }
+
     public void ajouterImg(Image img){
         this.arrayListFile.add(img);
     }
 
+    public void addImage(String category, Image image) {
+        imagesByCategory.put(category, image);
+    }
     public ArrayList<Image> getArrayListImage(){
         return this.arrayListFile;
     }
-
+    public Map<String, Image> getImagesByCategory() {
+        return imagesByCategory;
+    }
 }

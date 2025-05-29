@@ -10,17 +10,28 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import javax.imageio.ImageReader;
+import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 public class DetailController {
 
     @FXML private Button buttonAccueil;
-    @FXML private HBox cadrePhoto;
-    @FXML private Label titreImg;
+    @FXML private VBox cadrePhoto;
+    @FXML private Button deletePhoto;
+    @FXML private Button uploadButton;
+
+    @FXML private RadioButton radio1;
+    @FXML private RadioButton radioIPT;
+    @FXML private RadioButton radioDT;
 
     /* ------------------------------ */
     @FXML private Label labelAdresse;
@@ -41,18 +52,73 @@ public class DetailController {
     /* ------------------------------ */
     @FXML private HBox topHbox;
     @FXML private ImageView img;
-    @FXML private Label labelBas;
-    private ArrayList<Image> images = new ArrayList<>();
-    private int currentImageIndex = 0;
+
+    private ArrayList<Image> images = new ArrayList<>(Arrays.asList(null, null, null)); //Cette écriture évite les out of bound exeption
+    private Map<String, Image> imagesByCategory = new HashMap<>();
+    private String currentCategory = null;
     private Chantier chantier;
 
     @FXML
     public void initialize(){
 
+        radio1.setUserData("Arrêté");
+        radioIPT.setUserData("IPT");
+        radioDT.setUserData("DT/DICT");
+
         this.res1.setText(this.chantier.getDate().toString());
         this.res2.setText(this.chantier.getAdresse());
         this.res3.setText(this.chantier.getConcessionaire().getNom());
 
+        ToggleGroup toggleGroup = new ToggleGroup();
+        radio1.setToggleGroup(toggleGroup);
+        radioIPT.setToggleGroup(toggleGroup);
+        radioDT.setToggleGroup(toggleGroup);
+
+        // Optionnel : définir un RadioButton sélectionné par défaut
+        radio1.setSelected(true);
+
+        setLabels();
+        setMap();
+
+        toggleGroup.selectedToggleProperty().addListener((obs, oldToggle, newToggle) -> {
+            if (newToggle != null) {
+                currentCategory = (String) newToggle.getUserData();
+                updateImageView();
+            }
+        });
+
+        radio1.setSelected(true);
+        currentCategory = "Arrêté";
+        updateImageView();
+    }
+    private void updateImageView() {
+        // Réinitialiser l'ImageView et les boutons
+        img.setImage(null);
+        uploadButton.setVisible(true);
+        uploadButton.setManaged(true);
+        deletePhoto.setVisible(false);
+        deletePhoto.setManaged(false);
+
+        // Si une catégorie est sélectionnée, vérifier si elle a une image
+        if (currentCategory != null) {
+            Image image = imagesByCategory.get(currentCategory);
+            if (image != null) {
+                img.setImage(image);
+                uploadButton.setVisible(false); // Cacher le bouton Upload si une image existe
+                uploadButton.setManaged(false);
+                deletePhoto.setVisible(true); // Afficher le bouton de suppression
+                deletePhoto.setManaged(true);
+            }
+        }
+    }
+    public void setChantier(Chantier c) {
+        this.chantier = c;
+    }
+
+    /**
+     * Wraper pour que ça soit plus propre
+     */
+    public void setLabels(){
         if(this.chantier.getVille() != null){
             this.res4.setText(this.chantier.getVille());
         }
@@ -64,27 +130,10 @@ public class DetailController {
         if(this.chantier.getResponsable() != null){
             this.res6.setText(this.chantier.getResponsable());
         }
-
-        try {
-            for(Image i : this.chantier.getArrayListImage()){
-                images.add(i);
-            }
-        } catch (Exception e) {
-            System.err.println("Erreur lors du chargement des images : " + e.getMessage());
-        }
-
-        updateImageDisplay();
-
     }
-    public void setChantier(Chantier c) {
-        this.chantier = c;
-    }
-
-
     public void handleAccueilButton(){
         switchToAccueil();
     }
-
     public void switchToAccueil(){
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/AccueilView.fxml"));
@@ -104,42 +153,43 @@ public class DetailController {
             e.printStackTrace();
         }
     }
-    @FXML
-    private void handlePreviousImage() {
-        if (images.isEmpty()) return;
-        currentImageIndex = (currentImageIndex - 1 + images.size()) % images.size();
-        updateImageDisplay();
-    }
-    @FXML
-    public void handleNextImage() {
-        if (images.isEmpty()) return;
-        currentImageIndex = (currentImageIndex + 1) % images.size();
-        updateImageDisplay();
-    }
 
-    public void updateImageDisplay() {
-        if (images.isEmpty()) {
-            // Aucune image : afficher le bouton d'upload, cacher cadrePhoto
-            img.setImage(null);
-            cadrePhoto.setVisible(false);
-            cadrePhoto.setManaged(false);
-        } else {
-            // Images présentes : afficher l'image actuelle, montrer cadrePhoto, cacher uploadButton
-            img.setImage(images.get(currentImageIndex));
-            cadrePhoto.setVisible(true);
-            cadrePhoto.setManaged(true);
-            //On met à jour le label du bas
-            this.labelBas.setText((this.currentImageIndex + 1)+"/"+this.images.size());
+    @FXML
+    private void handleUploadImage() throws URISyntaxException {
+        if (currentCategory == null) {
+            System.out.println("Aucune catégorie sélectionnée.");
+            return;
+        }
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg")
+        );
+        File file = fileChooser.showOpenDialog(null);
+
+        if (file != null) {
+            String imagePath = file.toURI().toString();
+           // storeImagePath(imagePath);
+            Image image = new Image(imagePath);
+            imagesByCategory.put(currentCategory, image);
+
+            updateImageView(); // Mettre à jour l'affichage
         }
     }
-
-    public void setTitreImg(){
-        if(this.currentImageIndex == 1){
-            this.titreImg.setText("Arrếté");
-        } else if (this.currentImageIndex == 2) {
-            this.titreImg.setText("");
+    @FXML
+    private void handleDeleteImage() {
+        if (currentCategory != null) {
+            imagesByCategory.remove(currentCategory); // Supprimer l'image de la catégorie
+            System.out.println(this.imagesByCategory);
+            updateImageView(); // Mettre à jour l'affichage
         }
     }
+    public void setMap() {
+        this.imagesByCategory.putAll(chantier.getImagesByCategory());
+    }
+
+
+
 
 
 

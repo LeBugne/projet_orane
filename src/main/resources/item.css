@@ -1,0 +1,9 @@
+#mainAnchorPane Button {
+    -fx-opacity: 0;
+    -fx-pointer-events: none;
+}
+
+#mainAnchorPane:hover Button {
+    -fx-opacity: 1;
+    -fx-pointer-events: auto;
+}

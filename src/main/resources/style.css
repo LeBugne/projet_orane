@@ -30,7 +30,7 @@
  }
 
 .boutton-bleu {
-    -fx-background-color: #1899D6;
+    -fx-background-color: #6d88b5;
     -fx-border-color: transparent;
     -fx-border-radius: 16px;
     -fx-border-width: 0 0 4px 0;
@@ -122,7 +122,7 @@
 
 /* Optionnel : Effet au survol pour dynamisme */
 .bordered-hbox:hover {
-    -fx-border-color: #0077FF; /* Couleur primaire au survol */
+    -fx-border-color: #d72b03; /* Couleur primaire au survol */
 }
 
 /* Style de base pour les labels */
@@ -175,3 +175,42 @@
     -fx-background-color: rgba(108,140,171,0.5);
     -fx-padding: 10px;
 }
+
+.delete-button {
+    -fx-background-color: red;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+}
+
+.delete-button2 {
+    -fx-background-color: linear-gradient(
+        to left,
+        #6d88b5 0%,    /* rouge au début (droite) */
+        #a7b7d1 50%,   /* blanc au milieu */
+        #6d88b5 100%   /* rouge à la fin (gauche) */
+    );
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-background-radius: 8;
+    -fx-padding: 8 16;
+    -fx-font-size: 14px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.4), 4, 0, 0, 2);
+}
+
+.delete-button2:hover {
+    -fx-background-color: linear-gradient(
+        to left,
+        #435470 0%,
+        #8591a6 50%,
+        #435470 100%
+    );
+    -fx-text-fill: #d72b03;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.6), 8, 0, 0, 4);
+}
+
+.bordered-hbox {
+    -fx-border-color: black;
+    -fx-border-width: 1;
+}
+

@@ -2,6 +2,7 @@ package globale.model;
 
 import globale.Observateur;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +19,7 @@ public class SujetObserve {
         observateurs.remove(obs);
     }
 
-    public void notifierObservateurs() {
+    public void notifierObservateurs() throws IOException {
         for (Observateur obs : observateurs) {
             obs.reagir();
         }

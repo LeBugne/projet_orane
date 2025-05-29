@@ -34,6 +34,7 @@
                </padding>
             </HBox>
             <Button fx:id="buttonEdition" alignment="CENTER" mnemonicParsing="false" onAction="#handleButtonEdition" prefHeight="80.0" prefWidth="134.0" text="Edition" />
+            <Button fx:id="test" mnemonicParsing="false" onAction="#test" text="test" />
          </children>
       </VBox>
    </left>
@@ -47,7 +48,6 @@
                         <Font name="Monospaced Bold" size="13.0" />
                      </font>
                   </Label>
-                  <Button fx:id="edit" mnemonicParsing="false" text="edit" />
                </children>
             </HBox>
             <ScrollPane fx:id="scrollPane" fitToHeight="true" fitToWidth="true" VBox.vgrow="ALWAYS">               <content>
