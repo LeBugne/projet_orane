@@ -7,6 +7,7 @@ import globale.model.Travaux;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
+import javafx.geometry.Point2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -16,6 +17,8 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class AccueilController implements Observateur {
     @FXML private Label LabelTitre;
@@ -35,10 +38,79 @@ public class AccueilController implements Observateur {
     @FXML
     public void initialize() throws IOException {
         this.grille.getStyleClass().add("grid");
+        setupSearchBar();
         update();
     }
 
-    private void handleTextField(){
+    private void setupSearchBar() {
+        // Créer un ContextMenu pour les suggestions
+        ContextMenu suggestionsMenu = new ContextMenu();
+
+        // Écouter les changements dans searchBar
+        searchBar.textProperty().addListener((obs, oldValue, newValue) -> {
+            suggestionsMenu.getItems().clear();
+
+
+
+            // Filtrer les adresses correspondant au texte saisi
+            List<String> matchingAdresses = Travaux.getInstance().getChantierMap().values().stream().map(Chantier::getAdresse)
+                    .filter(adresse -> adresse.toLowerCase().contains(newValue.toLowerCase()))
+                    .distinct()
+                    .sorted()
+                    .collect(Collectors.toList());
+
+            // Ajouter les suggestions au ContextMenu
+            for (String adresse : matchingAdresses) {
+                MenuItem item = new MenuItem(adresse);
+                item.setOnAction(event -> {
+                    searchBar.setText(adresse);
+                    filterChantiers(adresse);
+                    suggestionsMenu.hide();
+                });
+                suggestionsMenu.getItems().add(item);
+            }
+
+            // Afficher les suggestions si elles existent
+            if (!matchingAdresses.isEmpty() && searchBar.getScene() != null && searchBar.getScene().getWindow() != null) {
+                // Je veux que le menu est la même largeur que la barre de recherche
+                suggestionsMenu.setMinWidth(searchBar.getWidth());
+
+                // Utiliser localToScreen pour des coordonnées précises
+                Point2D screenPos = searchBar.localToScreen(0, searchBar.getHeight());
+                if (screenPos != null) {
+                    suggestionsMenu.show(
+                            searchBar,
+                            screenPos.getX(),
+                            screenPos.getY()
+                    );
+                } else {
+                    System.out.println("Erreur : localToScreen a retourné null");
+                }
+            } else {
+                System.out.println("Aucune suggestion ou Scene/Window null");
+                suggestionsMenu.hide();
+            }
+
+            // Filtrer les chantiers en temps réel
+            filterChantiers(newValue);
+        });
+
+        // Cacher le menu des suggestions lorsque searchBar perd le focus
+        searchBar.focusedProperty().addListener((obs, wasFocused, isFocused) -> {
+            if (!isFocused) {
+                suggestionsMenu.hide();
+            }
+        });
+    }
+
+    private void filterChantiers(String searchText) {
+        // Filtrer les chantiers dont l’adresse contient le texte saisi
+        List<Chantier> filteredChantiers = Travaux.getInstance().getChantierMap().values().stream()
+                .filter(chantier -> chantier.getAdresse().toLowerCase().contains(searchText.toLowerCase()))
+                .toList();
+
+        // Mettre à jour le GridPane
+        afficherSuggestion(filteredChantiers);
     }
     @FXML
     private void handleButtonEdition() {
@@ -113,61 +185,152 @@ public class AccueilController implements Observateur {
         }
     }
 
-    public void test() throws IOException {
-    // Création d'un concessionaire fictif
-        Concessionaire fakeConcessionaire = new Concessionaire("NomConcessionaire");
+    private void afficherSuggestion(List<Chantier> chantiers) {
+        // Vider le GridPane
+        grille.getChildren().clear();
 
-    // Date fictive (format texte attendu par ton constructeur)
-        String fakeDate = "28/05/2025";
+        // Configuration de la grille
+        int numColumns = 2;
+        int numRows = (int) Math.ceil((double) chantiers.size() / numColumns);
 
-    // Adresse fictive
-        String fakeAdresse = "123 Rue de l'Exemple, Paris";
-
-    // Création d'un chantier fictif
-        Chantier fakeChantier = new Chantier(fakeConcessionaire, fakeDate, fakeAdresse);
-
-    // On peut compléter les autres champs si besoin :
-        fakeChantier.setTelephone("0123456789");
-        fakeChantier.setVille("Paris");
-        fakeChantier.setResponsable("Jean Dupont");
-
-
-    // Ajouter des fichiers/images fictives
-        fakeChantier.getArrayListImage().add(new Image("file:/home/lebugne/IdeaProjects/projet_orane/icon.jpeg"));
-        fakeChantier.getArrayListImage().add(new Image("file:/home/lebugne/Bureau/insta_photo.jpg"));
-
-        Travaux.getInstance().ajouterChantier(fakeChantier);
-
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/ItemView.fxml"));
-        AnchorPane anchorPane = fxmlLoader.load();
-
-        ItemController item = fxmlLoader.getController();
-        item.setData(fakeChantier);
-
-        anchorPane.setOnMouseClicked(event -> {
+        // Ajouter chaque chantier au GridPane
+        for (int i = 0; i < chantiers.size(); i++) {
+            Chantier chantier = chantiers.get(i);
             try {
-                FXMLLoader detailLoader = new FXMLLoader(getClass().getResource("/fxml/DetailView.fxml"));
-                /* Cette syntaxe permet un control plus accru sur la façon dont le controller est initialisé */
-                detailLoader.setControllerFactory(param -> {
-                    DetailController detailController = new DetailController();
-                    detailController.setChantier(fakeChantier);  // injecter AVANT le .load()
-                    return detailController;
+                // Charger ItemView.fxml
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/ItemView.fxml"));
+                AnchorPane anchorPane = fxmlLoader.load();
+
+                // Configurer le contrôleur
+                ItemController itemController = fxmlLoader.getController();
+                itemController.setData(chantier);
+
+                // Gestionnaire de clic pour ouvrir DetailView
+                anchorPane.setOnMouseClicked(event -> {
+                    try {
+                        FXMLLoader detailLoader = new FXMLLoader(getClass().getResource("/fxml/DetailView.fxml"));
+                        detailLoader.setControllerFactory(param -> {
+                            DetailController detailController = new DetailController();
+                            detailController.setChantier(chantier);
+                            return detailController;
+                        });
+                        Scene newScene = new Scene(detailLoader.load());
+                        Stage stage = (Stage) anchorPane.getScene().getWindow();
+                        stage.setScene(newScene);
+                        stage.show();
+                    } catch (IOException e) {
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setTitle("Erreur");
+                        alert.setHeaderText("Erreur de navigation");
+                        alert.setContentText("Impossible d’ouvrir DetailView : " + e.getMessage());
+                        alert.showAndWait();
+                    }
                 });
-                Scene newScene = new Scene(detailLoader.load());
 
-                DetailController detailController = detailLoader.getController();
+                // Ajouter au GridPane
+                int row = i / numColumns;
+                int col = i % numColumns;
+                grille.add(anchorPane, col, row);
+                GridPane.setMargin(anchorPane, new Insets(20));
 
-                Stage stage = (Stage) anchorPane.getScene().getWindow();
-                stage.setScene(newScene);
-                stage.show();
             } catch (IOException e) {
-                System.err.println("Erreur lors de l'ouverture de DetailView : " + e.getMessage());
-                e.printStackTrace();
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Erreur");
+                alert.setHeaderText("Erreur de chargement");
+                alert.setContentText("Impossible de charger ItemView : " + e.getMessage());
+                alert.showAndWait();
             }
-        });
+        }
 
+        // Ajuster les espacements
+        grille.setHgap(10);
+        grille.setVgap(10);
 
-        this.grille.add(anchorPane,0,0);
+    }
+    public void test() throws IOException {
+        // Définir des données fictives de base
+        String baseConcessionnaire = "Concessionnaire";
+        String baseDate = "28/05/2025";
+        String baseAdresse = "Rue de l'Exemple";
+        String baseVille = "Paris";
+        String baseResponsable = "Jean Dupont";
+        String baseTelephone = "0123456789";
+
+        // Liste d'images fictives (réutilisées pour tous les chantiers)
+        String[] fakeImages = {
+                "file:/home/lebugne/IdeaProjects/projet_orane/icon.jpeg",
+                "file:/home/lebugne/Bureau/insta_photo.jpg"
+        };
+
+        // Nombre de chantiers à créer
+        int numChantiers = 10;
+        int numColumns = 3; // 2 colonnes
+        int numRows = (int) Math.ceil((double) numChantiers / numColumns); // Calculer les lignes nécessaires
+
+        // Boucle pour créer 10 chantiers
+        for (int i = 0; i < numChantiers; i++) {
+            // Créer un concessionnaire fictif
+            Concessionaire fakeConcessionnaire = new Concessionaire(baseConcessionnaire + " " + (i + 1));
+
+            // Adresse unique pour chaque chantier
+            String fakeAdresse = (100 + i * 10) + " " + baseAdresse + ", " + baseVille;
+
+            // Créer un chantier fictif
+            Chantier fakeChantier = new Chantier(fakeConcessionnaire, baseDate, fakeAdresse);
+            fakeChantier.setTelephone(baseTelephone);
+            fakeChantier.setVille(baseVille);
+            fakeChantier.setResponsable(baseResponsable + " " + (i + 1));
+
+            // Ajouter des images fictives
+            for (String imagePath : fakeImages) {
+                try {
+                    Image image = new Image(imagePath);
+                    fakeChantier.ajouterImg(image);
+                } catch (Exception e) {
+                    System.err.println("Erreur lors de l'ajout de l'image " + imagePath + " : " + e.getMessage());
+                }
+            }
+
+            // Ajouter le chantier à Travaux
+            Travaux.getInstance().ajouterChantier(fakeChantier.getId(),fakeChantier);
+
+            // Charger ItemView.fxml
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/ItemView.fxml"));
+            AnchorPane anchorPane = fxmlLoader.load();
+
+            // Configurer le contrôleur
+            ItemController itemController = fxmlLoader.getController();
+            itemController.setData(fakeChantier);
+
+            // Ajouter un gestionnaire de clic pour ouvrir DetailView
+            anchorPane.setOnMouseClicked(event -> {
+                try {
+                    FXMLLoader detailLoader = new FXMLLoader(getClass().getResource("/fxml/DetailView.fxml"));
+                    detailLoader.setControllerFactory(param -> {
+                        DetailController detailController = new DetailController();
+                        detailController.setChantier(fakeChantier); // Injecter le chantier
+                        return detailController;
+                    });
+                    Scene newScene = new Scene(detailLoader.load());
+
+                    Stage stage = (Stage) anchorPane.getScene().getWindow();
+                    stage.setScene(newScene);
+                    stage.show();
+                } catch (IOException e) {
+                    System.err.println("Erreur lors de l'ouverture de DetailView : " + e.getMessage());
+                    e.printStackTrace();
+                }
+            });
+
+            // Ajouter l’AnchorPane au GridPane
+            int row = i / numColumns;
+            int col = i % numColumns;
+            this.grille.add(anchorPane, col, row);
+        }
+
+        // Optionnel : Ajuster les espacements du GridPane
+        grille.setHgap(10); // Espacement horizontal
+        grille.setVgap(10); // Espacement vertical
     }
 
 
