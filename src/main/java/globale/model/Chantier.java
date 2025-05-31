@@ -1,5 +1,6 @@
 package globale.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import globale.model.*;
 import globale.outils.*;
 import javafx.scene.image.Image;
@@ -21,8 +22,22 @@ public class Chantier {
     private String responsable;
     private int id;
     private Arrete arrete;
+    private HashMap<String,String> imageFileNames = new HashMap<>(); // Noms de fichiers (ex: photo.jpg)
+    @JsonIgnore // J'ajoute ceci pour éviter que les objets Image soient serialisé et avoir des erreurs
     private ArrayList<Image> arrayListFile = new ArrayList<>();
-    private Map<String, Image> imagesByCategory = new HashMap<>();
+    @JsonIgnore // J'ajoute ceci pour éviter que les objets Image soient serialisé et avoir des erreurs
+    private HashMap<String, Image> imagesByCategory = new HashMap<>();
+
+    // Dans EditionController, c'est ici que l'on stocke les images sélectionnées
+    private static final String IMAGE_DIR = System.getProperty("user.home") + "/myapp/images/";
+
+
+    // Constructeur par défaut requis par Jackson
+    public Chantier() {
+        this.id = FabriqueIdentifiant.getInstance().getId();
+        this.adresse = "";
+        this.date = "";
+    }
     public Chantier(Concessionaire c, String date, String adr){
         this.concessionaire = c;
         DateTimeFormatter df = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -40,6 +55,10 @@ public class Chantier {
     }
     public String getVille() {
         return ville;
+    }
+
+    public HashMap<String,String> getImageFileNames(){
+         return this.imageFileNames;
     }
     public void setVille(String ville) {
         this.ville = ville;
@@ -86,7 +105,6 @@ public class Chantier {
     public Concessionaire getConcessionaire(){
         return this.concessionaire;
     }
-
     public void ajouterImg(Image img){
         this.arrayListFile.add(img);
     }
@@ -94,9 +112,12 @@ public class Chantier {
     public void addImage(String category, Image image) {
         imagesByCategory.put(category, image);
     }
+
+    @JsonIgnore
     public ArrayList<Image> getArrayListImage(){
         return this.arrayListFile;
     }
+    @JsonIgnore
     public Map<String, Image> getImagesByCategory() {
         return imagesByCategory;
     }

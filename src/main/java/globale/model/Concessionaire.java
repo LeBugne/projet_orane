@@ -8,9 +8,16 @@ public class Concessionaire {
     private String idConsultation;
     private String logo = "/images/photo.png";
 
+    // Constructeur par défaut requis par json
+    public Concessionaire(){
+        this.nom = "";
+    }
+
     public Concessionaire(String n) {
         this.nom = n;
     }
+
+
     public String getNom() {
         return nom;
     }

@@ -1,16 +1,20 @@
 package globale.org.example;
 
 import globale.controller.ControllerManager;
+import globale.model.Travaux;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.util.concurrent.TransferQueue;
+
 public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         try {
+            Travaux.getInstance().loadFromFile(); // Si il y'a une sauvegarde on charge déjà le modèle ( càd la HashMap )
             FXMLLoader loader = new FXMLLoader(Main.class.getResource("/fxml/AccueilView.fxml"));
             loader.setControllerFactory(param -> ControllerManager.getInstance().getAccueilController());
             Parent root = loader.load();

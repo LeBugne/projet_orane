@@ -1,9 +1,12 @@
 package globale.controller;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import globale.Observateur;
 import globale.model.Chantier;
 import globale.model.Concessionaire;
 import globale.model.Travaux;
+import javafx.animation.FadeTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -14,20 +17,28 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class AccueilController implements Observateur {
     @FXML private Label LabelTitre;
     @FXML private TextField searchBar;
     @FXML private Button buttonEdition;
+    @FXML private Label message;
 
     /* -------------------- */
     @FXML private ScrollPane scrollPane;
     @FXML private GridPane grille;
+    @FXML private Button sauver;
+    @FXML private Button exporter;
+    @FXML private Button importer;
     private Travaux travaux ;
 
     public AccueilController(Travaux model){
@@ -38,8 +49,31 @@ public class AccueilController implements Observateur {
     @FXML
     public void initialize() throws IOException {
         this.grille.getStyleClass().add("grid");
+        this.message.setVisible(false);
         setupSearchBar();
         update();
+    }
+
+    public void afficherErreur(String texteCible){
+        this.message.setVisible(true);
+        this.message.setText(texteCible);
+        FadeTransition fade = new FadeTransition(Duration.seconds(2), this.message);
+        fade.setFromValue(0.0); // Complètement transparent - c'est le point de départ
+        fade.setToValue(1.0);   // Complètement opaque - point d'arrivée
+        fade.setAutoReverse(true); // Revenir en arrière
+        fade.setCycleCount(2);  // 1 apparition + 1 disparition
+        fade.play(); // Lancer l'animation
+    }
+
+    public void afficherSucces(String texteCible){
+        this.message.setVisible(true);
+        this.message.setText(texteCible);
+        FadeTransition fade = new FadeTransition(Duration.seconds(2), this.message);
+        fade.setFromValue(0.0); // Complètement transparent - c'est le point de départ
+        fade.setToValue(1.0);   // Complètement opaque - point d'arrivée
+        fade.setAutoReverse(true); // Revenir en arrière
+        fade.setCycleCount(2);  // 1 apparition + 1 disparition
+        fade.play(); // Lancer l'animation
     }
 
     private void setupSearchBar() {
@@ -84,10 +118,10 @@ public class AccueilController implements Observateur {
                             screenPos.getY()
                     );
                 } else {
-                    System.out.println("Erreur : localToScreen a retourné null");
+                    System.out.println("message : localToScreen a retourné null");
                 }
             } else {
-                System.out.println("Aucune suggestion ou Scene/Window null");
+                afficherErreur("Aucun chantier ne correspond à cette adresse");
                 suggestionsMenu.hide();
             }
 
@@ -134,6 +168,50 @@ public class AccueilController implements Observateur {
         }
     }
 
+    @FXML
+    private void handleSave() {
+        try {
+            Travaux.getInstance().saveToFile();
+            afficherSucces("Sauvegarde réussie !");
+        } catch (IOException e) {
+            System.err.println("Erreur de sauvegarde - Version technique :\n" + e.getMessage());
+            afficherErreur("Erreur de sauvegarde - Version technique :\n" + e.getMessage());
+        }
+    }
+
+    @FXML
+    private void handleExport() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON", "*.json"));
+        File file = fileChooser.showSaveDialog(searchBar.getScene().getWindow());
+        if (file != null) {
+            try {
+                ObjectMapper mapper = new ObjectMapper();
+                mapper.writeValue(file, Travaux.getInstance().getChantierMap());
+                afficherSucces("Export réussi !");
+            } catch (IOException e) {
+                afficherErreur("Erreur d’export : " + e.getMessage());
+            }
+        }
+    }
+
+    @FXML
+    private void handleImport() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON Files", "*.json"));
+        File file = fileChooser.showOpenDialog(searchBar.getScene().getWindow());
+        if (file != null) {
+            try {
+                ObjectMapper mapper = new ObjectMapper();
+                Map<Integer, Chantier> importedChantiers = mapper.readValue(file, new TypeReference<Map<Integer, Chantier>>(){});
+                Travaux.getInstance().setChantierMap(importedChantiers);
+                afficherSucces("Import réussi !");
+            } catch (IOException e) {
+                afficherErreur("Erreur d'import : " + e.getMessage());
+            }
+        }
+    }
+
     /**
      * Si on ajoute un chantier une vignette dois s'ajouter
      */
@@ -168,7 +246,7 @@ public class AccueilController implements Observateur {
                         stage.setScene(newScene);
                         stage.show();
                     } catch (IOException e) {
-                        System.err.println("Erreur lors de l'ouverture de DetailView : " + e.getMessage());
+                        System.err.println("message lors de l'ouverture de DetailView : " + e.getMessage());
                         e.printStackTrace();
                     }
                 });
@@ -220,8 +298,8 @@ public class AccueilController implements Observateur {
                         stage.show();
                     } catch (IOException e) {
                         Alert alert = new Alert(Alert.AlertType.ERROR);
-                        alert.setTitle("Erreur");
-                        alert.setHeaderText("Erreur de navigation");
+                        alert.setTitle("message");
+                        alert.setHeaderText("message de navigation");
                         alert.setContentText("Impossible d’ouvrir DetailView : " + e.getMessage());
                         alert.showAndWait();
                     }
@@ -235,8 +313,8 @@ public class AccueilController implements Observateur {
 
             } catch (IOException e) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Erreur");
-                alert.setHeaderText("Erreur de chargement");
+                alert.setTitle("message");
+                alert.setHeaderText("message de chargement");
                 alert.setContentText("Impossible de charger ItemView : " + e.getMessage());
                 alert.showAndWait();
             }
@@ -287,7 +365,7 @@ public class AccueilController implements Observateur {
                     Image image = new Image(imagePath);
                     fakeChantier.ajouterImg(image);
                 } catch (Exception e) {
-                    System.err.println("Erreur lors de l'ajout de l'image " + imagePath + " : " + e.getMessage());
+                    System.err.println("message lors de l'ajout de l'image " + imagePath + " : " + e.getMessage());
                 }
             }
 
@@ -317,7 +395,7 @@ public class AccueilController implements Observateur {
                     stage.setScene(newScene);
                     stage.show();
                 } catch (IOException e) {
-                    System.err.println("Erreur lors de l'ouverture de DetailView : " + e.getMessage());
+                    System.err.println("message lors de l'ouverture de DetailView : " + e.getMessage());
                     e.printStackTrace();
                 }
             });

@@ -63,6 +63,7 @@ public class EditionController implements Observateur {
     private Travaux travaux;
     private ArrayList<File> arrayListFile = new ArrayList<>();
 
+    private static final String IMAGE_DIR = System.getProperty("user.home") + "/myapp/images/";
 
     private static final Pattern EMAIL_PATTERN = Pattern.compile(
             "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"
@@ -214,14 +215,14 @@ public class EditionController implements Observateur {
         creation.setResponsable(responsable);
         creation.setTelephone(tel);
 
-/*     for(File f : this.arrayListFile){
-            Image i = new Image(f.toURI().toString());
-            System.out.println("file"+i.getUrl());
-            creation.ajouterImg(i);
-        }*/
-
         /* Ici on verse les images chargé, dans l'objet du modèle (Chantier) qui permet de garder en mémoire les images */
         creation.getImagesByCategory().putAll(this.imagesByCategory);
+        for (Map.Entry<String, Image> entry : imagesByCategory.entrySet()) {
+            String key = entry.getKey();
+            String url = entry.getValue().getUrl();
+            url = "file:" + IMAGE_DIR + url.substring(url.lastIndexOf('/') + 1);;
+            creation.getImageFileNames().put(key, url);
+        }
 
         Travaux.getInstance().ajouterChantier(creation);
         Travaux.getInstance().ajouterChantier(creation.getId(),creation);
