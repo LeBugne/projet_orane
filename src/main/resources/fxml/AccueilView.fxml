@@ -57,8 +57,8 @@
                      </font>
                   </Label>
                   <Button fx:id="sauver" onAction="#handleSave" mnemonicParsing="false" prefHeight="24.0" prefWidth="25.0" text="S" />
-                  <Button fx:id="exporter" mnemonicParsing="false" prefHeight="24.0" prefWidth="34.0" text="E" />
-                  <Button fx:id="importer" mnemonicParsing="false" prefHeight="24.0" prefWidth="31.0" text="I" />
+                  <Button fx:id="exporter" onAction="#handleExport" mnemonicParsing="false" prefHeight="24.0" prefWidth="34.0" text="E" />
+                  <Button fx:id="importer" onAction="#handleImport" mnemonicParsing="false" prefHeight="24.0" prefWidth="31.0" text="I" />
                </children>
             </HBox>
             <ScrollPane fx:id="scrollPane" fitToHeight="true" fitToWidth="true" VBox.vgrow="ALWAYS">               <content>
