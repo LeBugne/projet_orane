@@ -1,6 +1,7 @@
 package globale.controller;
 
 import globale.model.Chantier;
+import globale.model.Concessionaire;
 import javafx.fxml.FXML;
 
 import javafx.fxml.FXMLLoader;
@@ -9,6 +10,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -16,7 +18,10 @@ import javafx.stage.Stage;
 import javax.imageio.ImageReader;
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -34,7 +39,11 @@ public class DetailController {
     @FXML private RadioButton radioDT;
 
     /* ------------------------------ */
+    @FXML private VBox vbox1, vbox2, vbox3, vbox4, vbox5, vbox6;
     @FXML private Label labelAdresse;
+    @FXML private Label res1;
+
+
     @FXML private Label labelConcessionaire;
     @FXML private Label labelDate;
     @FXML private Label labelResp;
@@ -42,7 +51,6 @@ public class DetailController {
     @FXML private Label labelVille;
     @FXML private VBox listeInfo;
 
-    @FXML private Label res1;
     @FXML private Label res2;
     @FXML private Label res3;
     @FXML private Label res4;
@@ -52,8 +60,6 @@ public class DetailController {
     /* ------------------------------ */
     @FXML private HBox topHbox;
     @FXML private ImageView img;
-
-    private ArrayList<Image> images = new ArrayList<>(Arrays.asList(null, null, null)); //Cette écriture évite les out of bound exeption
     private Map<String, Image> imagesByCategory = new HashMap<>();
     private String currentCategory = null;
     private Chantier chantier;
@@ -78,7 +84,6 @@ public class DetailController {
         radio1.setSelected(true);
 
         setLabels();
-        setMap();
 
         toggleGroup.selectedToggleProperty().addListener((obs, oldToggle, newToggle) -> {
             if (newToggle != null) {
@@ -89,7 +94,10 @@ public class DetailController {
 
         radio1.setSelected(true);
         currentCategory = "Arrêté";
-        updateImageView();
+
+        configureEditableLabelWraper();
+
+        loadImages();
     }
     private void updateImageView() {
         // Réinitialiser l'ImageView et les boutons
@@ -154,6 +162,29 @@ public class DetailController {
         }
     }
 
+    private void storeImagePath(String imagePath) throws URISyntaxException {
+        File sourceFile = new File(new URI(imagePath));
+
+        // Dossier externe : ~/myapp/images
+        String userHome = System.getProperty("user.home");
+        File targetDir = new File(userHome, "myapp/images");
+        if (!targetDir.exists()) {
+            targetDir.mkdirs();
+        }
+
+        File targetFile = new File(targetDir, sourceFile.getName());
+
+
+        try {
+            Files.copy(sourceFile.toPath(), targetFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            String relativePath = "images/" + sourceFile.getName();
+            //System.out.println("Image copiée et stockée : " + relativePath);
+            // Stocker relativePath dans une base de données ou une liste
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     @FXML
     private void handleUploadImage() throws URISyntaxException {
         if (currentCategory == null) {
@@ -169,24 +200,108 @@ public class DetailController {
 
         if (file != null) {
             String imagePath = file.toURI().toString();
-           // storeImagePath(imagePath);
+            System.out.println();
             Image image = new Image(imagePath);
+            storeImagePath(imagePath);
             imagesByCategory.put(currentCategory, image);
+            this.chantier.addImage(currentCategory,file.getName());
 
             updateImageView(); // Mettre à jour l'affichage
         }
+    }
+
+    /**
+     * Cette fonction permet de charger les images dès l'arrivé dans le détail
+     */
+    public void loadImages() {
+        imagesByCategory.clear(); // Vider la map pour éviter les doublons
+        for (Map.Entry<String, String> entry : chantier.getImageFileNames().entrySet()) {
+            String category = entry.getKey();
+            String url = entry.getValue();
+            try {
+                Image image = new Image(url);
+                imagesByCategory.put(category, image);
+            } catch (Exception e) {
+                System.err.println("Erreur chargement image pour catégorie " + category + ": " + e.getMessage());
+            }
+        }
+        updateImageView();
     }
     @FXML
     private void handleDeleteImage() {
         if (currentCategory != null) {
             imagesByCategory.remove(currentCategory); // Supprimer l'image de la catégorie
-            System.out.println(this.imagesByCategory);
+            this.chantier.remove(currentCategory); // On modifie le modèle
             updateImageView(); // Mettre à jour l'affichage
         }
     }
-    public void setMap() {
-        this.imagesByCategory.putAll(chantier.getImagesByCategory());
+
+    private void configureEditableLabelWraper(){
+        configureEditableLabel(vbox1, res1, "date");
+        configureEditableLabel(vbox2, res2, "adresse");
+        configureEditableLabel(vbox3, res3, "concessionnaire");
+        configureEditableLabel(vbox4, res4, "ville");
+        configureEditableLabel(vbox5, res5, "telephone");
+        configureEditableLabel(vbox6, res6, "responsable");
     }
+    private void configureEditableLabel(VBox vbox, Label label, String attribute) {
+        vbox.setOnMouseClicked(event -> {
+            TextField textField = new TextField(label.getText());
+            textField.setPrefWidth(label.getWidth());
+            textField.getStyleClass().add("editable-field");
+            int index = vbox.getChildren().indexOf(label);
+            vbox.getChildren().set(index, textField);
+            textField.requestFocus();
+            textField.selectAll();
+
+            // Valider avec Entrée
+            textField.setOnKeyPressed(keyEvent -> {
+                if (keyEvent.getCode() == KeyCode.ENTER) {
+                    String newValue = textField.getText().trim();
+                    if (!newValue.isEmpty()) {
+                        switch (attribute) {
+                            case "date" -> chantier.setDate(newValue);
+                            case "adresse" -> chantier.setAdresse(newValue);
+                            case "concessionnaire" -> chantier.setConcessionnaire(new Concessionaire(newValue));
+                            case "ville" -> chantier.setVille(newValue);
+                            case "telephone" -> chantier.setTelephone(newValue);
+                            case "responsable" -> chantier.setResponsable(newValue);
+                        }
+                        label.setText(newValue);
+                    }
+                    vbox.getChildren().set(index, label);
+                } else if (keyEvent.getCode() == KeyCode.ESCAPE) {
+                    // Annuler avec Échap
+                    vbox.getChildren().set(index, label);
+                }
+            });
+
+            // Annuler sur perte de focus (clic hors du TextField)
+            textField.focusedProperty().addListener((obs, wasFocused, isFocused) -> {
+                if (wasFocused && !isFocused) {
+                    // Restaurer le Label sans sauvegarder
+                    vbox.getChildren().set(index, label);
+                }
+            });
+        });
+    }
+
+    private void validateInput(TextField textField, Label label, String attribute, int index, VBox vbox) {
+        String newValue = textField.getText().trim();
+        if (!newValue.isEmpty()) {
+            switch (attribute) {
+                case "date" -> chantier.setDate(newValue);
+                case "adresse" -> chantier.setAdresse(newValue);
+                case "concessionnaire" -> chantier.setConcessionnaire(new Concessionaire(newValue));
+                case "ville" -> chantier.setVille(newValue);
+                case "telephone" -> chantier.setTelephone(newValue);
+                case "responsable" -> chantier.setResponsable(newValue);
+            }
+            label.setText(newValue);
+        }
+        vbox.getChildren().set(index, label);
+    }
+
 
 
 

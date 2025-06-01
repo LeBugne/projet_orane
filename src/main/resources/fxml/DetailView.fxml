@@ -17,37 +17,37 @@
             <Insets left="30.0" right="30.0" />
          </BorderPane.margin>
          <children>
-            <VBox alignment="CENTER" prefHeight="45.0" prefWidth="298.0" spacing="10.0" styleClass="styled-vbox" stylesheets="@../style.css">
+            <VBox fx:id="vbox1" alignment="CENTER" prefHeight="45.0" prefWidth="298.0" spacing="10.0" styleClass="styled-vbox" stylesheets="@../style.css">
                <children>
                   <Label fx:id="labelDate" stylesheets="@../style.css" text="Date du chantier" underline="true" />
                   <Label fx:id="res1" text="Label" />
                </children>
             </VBox>
-            <VBox alignment="CENTER" prefHeight="39.0" prefWidth="298.0" spacing="10.0" styleClass="styled-vbox" stylesheets="@../style.css">
+            <VBox fx:id="vbox2" alignment="CENTER" prefHeight="39.0" prefWidth="298.0" spacing="10.0" styleClass="styled-vbox" stylesheets="@../style.css">
                <children>
                   <Label fx:id="labelAdresse" stylesheets="@../style.css" text="Adresse" underline="true" />
                   <Label fx:id="res2" text="Label" />
                </children>
             </VBox>
-            <VBox alignment="CENTER" prefHeight="64.0" prefWidth="298.0" spacing="10.0" styleClass="styled-vbox" stylesheets="@../style.css">
+            <VBox fx:id="vbox3" alignment="CENTER" prefHeight="64.0" prefWidth="298.0" spacing="10.0" styleClass="styled-vbox" stylesheets="@../style.css">
                <children>
                   <Label fx:id="labelConcessionaire" stylesheets="@../style.css" text="Concessionaire" underline="true" />
                   <Label fx:id="res3" text="Label" />
                </children>
             </VBox>
-            <VBox alignment="CENTER" prefHeight="55.0" prefWidth="298.0" spacing="10.0" styleClass="styled-vbox" stylesheets="@../style.css">
+            <VBox fx:id="vbox4" alignment="CENTER" prefHeight="55.0" prefWidth="298.0" spacing="10.0" styleClass="styled-vbox" stylesheets="@../style.css">
                <children>
                   <Label fx:id="labelVille" text="Ville" underline="true" />
                   <Label fx:id="res4" text="Label" />
                </children>
             </VBox>
-            <VBox alignment="CENTER" prefHeight="54.0" prefWidth="298.0" spacing="10.0" styleClass="styled-vbox" stylesheets="@../style.css">
+            <VBox fx:id="vbox5" alignment="CENTER" prefHeight="54.0" prefWidth="298.0" spacing="10.0" styleClass="styled-vbox" stylesheets="@../style.css">
                <children>
                   <Label fx:id="labelTel" text="Téléphone" underline="true" />
                   <Label fx:id="res5" text="Label" />
                </children>
             </VBox>
-            <VBox alignment="CENTER" prefHeight="36.0" prefWidth="298.0" spacing="10.0" styleClass="styled-vbox" stylesheets="@../style.css">
+            <VBox fx:id="vbox6" alignment="CENTER" prefHeight="36.0" prefWidth="298.0" spacing="10.0" styleClass="styled-vbox" stylesheets="@../style.css">
                <children>
                   <Label fx:id="labelResp" text="Responsable" underline="true" />
                   <Label fx:id="res6" text="Label" />

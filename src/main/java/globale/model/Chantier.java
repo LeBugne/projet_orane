@@ -77,16 +77,13 @@ public class Chantier {
     public void setArrete(Arrete arrete) {
         this.arrete = arrete;
     }
-
     public void setDate(String date) {
         this.date = date;
     }
-
     public void setAdresse(String adresse) {
         this.adresse = adresse;
     }
-
-    public void setConcessionaire(Concessionaire concessionaire) {
+    public void setConcessionnaire(Concessionaire concessionaire) {
         this.concessionaire = concessionaire;
     }
 
@@ -111,6 +108,19 @@ public class Chantier {
 
     public void addImage(String category, Image image) {
         imagesByCategory.put(category, image);
+    }
+
+    public void addImage(String categorie, String nomFichier) {
+        if (nomFichier != null && !nomFichier.isEmpty()) {
+            // Former une URL valide : file:/home/user/myapp/images/nomFichier
+            String url = "file:" + IMAGE_DIR + nomFichier;
+            System.out.println("url ajouté : " + url);
+            imageFileNames.put(categorie, url);
+        }
+    }
+
+    public void remove(String category){
+        this.imageFileNames.remove(category);
     }
 
     @JsonIgnore
