@@ -1,14 +1,12 @@
 name: Build and Package Java App
 
 env:
-  TAG_NAME: release-${{ github.run_id }} #Comme un " #define" en C
+  TAG_NAME: release-${{ github.run_id }}
 
 on:
   push:
     branches:
       - main
-    # Cette condition permet de cibler des messages de commit spécifiques
-    # Ici, on ne déclenche le workflow que pour des commits contenant "[build]" dans le message
     commit_message: '.*\[build\].*'
 
 permissions:
@@ -26,9 +24,13 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
+          cache: 'maven'
+
+      - name: Resolve dependencies
+        run: mvn -P linux dependency:go-offline
 
       - name: Build with Maven
-        run: mvn clean package
+        run: mvn -P linux clean package
 
       - name: Package with jpackage
         run: |
@@ -60,29 +62,35 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
+          cache: 'maven'
 
-      - name: Resolve Maven dependencies
-        run: mvn dependency:resolve
+      - name: Resolve dependencies
+        run: mvn -P windows dependency:go-offline
+        shell: pwsh
 
       - name: Build JAR with Maven
-        run: mvn clean package
+        run: mvn -P windows clean package
+        shell: pwsh
 
       - name: Verify JavaFX dependencies
         run: |
-          ls -l $env:USERPROFILE\.m2\repository\org\openjfx\javafx-base\17.0.15\
-          ls -l $env:USERPROFILE\.m2\repository\org\openjfx\javafx-controls\17.0.15\
-          ls -l $env:USERPROFILE\.m2\repository\org\openjfx\javafx-fxml\17.0.15\
-          ls -l $env:USERPROFILE\.m2\repository\org\openjfx\javafx-graphics\17.0.15\
+          $m2Repo = Join-Path $env:USERPROFILE ".m2/repository/org/openjfx"
+          $javafxVersion = "19.0.2.1"
+          Get-ChildItem -Path (Join-Path $m2Repo "javafx-base/$javafxVersion") -Filter "javafx-base-$javafxVersion-win.jar" -ErrorAction Stop
+          Get-ChildItem -Path (Join-Path $m2Repo "javafx-controls/$javafxVersion") -Filter "javafx-controls-$javafxVersion-win.jar" -ErrorAction Stop
+          Get-ChildItem -Path (Join-Path $m2Repo "javafx-fxml/$javafxVersion") -Filter "javafx-fxml-$javafxVersion-win.jar" -ErrorAction Stop
+          Get-ChildItem -Path (Join-Path $m2Repo "javafx-graphics/$javafxVersion") -Filter "javafx-graphics-$javafxVersion-win.jar" -ErrorAction Stop
         shell: pwsh
 
       - name: Create Runtime Image with jlink
         run: |
-          # Créer un dossier pour les JAR JavaFX
-          mkdir javafx-jars
-          cp $env:USERPROFILE\.m2\repository\org\openjfx\javafx-base\17.0.15\javafx-base-17.0.15-win.jar javafx-jars/
-          cp $env:USERPROFILE\.m2\repository\org\openjfx\javafx-controls\17.0.15\javafx-controls-17.0.15-win.jar javafx-jars/
-          cp $env:USERPROFILE\.m2\repository\org\openjfx\javafx-fxml\17.0.15\javafx-fxml-17.0.15-win.jar javafx-jars/
-          cp $env:USERPROFILE\.m2\repository\org\openjfx\javafx-graphics\17.0.15\javafx-graphics-17.0.15-win.jar javafx-jars/
+          # Utiliser les JARs copiés par maven-dependency-plugin
+          $javafxVersion = "19.0.2.1"
+          New-Item -ItemType Directory -Path javafx-jars -Force
+          Copy-Item -Path "target/libs/javafx-base-$javafxVersion-win.jar" -Destination javafx-jars/
+          Copy-Item -Path "target/libs/javafx-controls-$javafxVersion-win.jar" -Destination javafx-jars/
+          Copy-Item -Path "target/libs/javafx-fxml-$javafxVersion-win.jar" -Destination javafx-jars/
+          Copy-Item -Path "target/libs/javafx-graphics-$javafxVersion-win.jar" -Destination javafx-jars/
           # Exécuter jlink
           jlink `
             --module-path "javafx-jars;$env:JAVA_HOME\jmods" `
@@ -100,7 +108,7 @@ jobs:
             --type msi `
             --input target `
             --dest dist `
-            --name Kifékoi? `
+            --name TravauxApp `
             --main-jar TravauxApp-1.0.jar `
             --main-class org.example.Main `
             --icon icon.ico `
@@ -111,7 +119,7 @@ jobs:
 
       - name: Verify MSI file
         run: |
-          ls -l dist/
+          Get-ChildItem -Path dist/
           if (-Not (Test-Path dist/TravauxApp-1.0.msi)) { Write-Error "TravauxApp-1.0.msi not found"; exit 1 }
         shell: pwsh
 
@@ -120,7 +128,6 @@ jobs:
         with:
           name: MonApp-windows
           path: dist/TravauxApp-1.0.msi
-
 
   release:
     needs: [build-linux, build-windows]
@@ -145,4 +152,3 @@ jobs:
           files: dist/*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
