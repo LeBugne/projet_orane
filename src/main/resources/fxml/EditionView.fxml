@@ -6,20 +6,26 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.control.ToggleGroup?>
-
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="656.0" prefWidth="1053.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="globale.controller.EditionController">
    <top>
-      <Button fx:id="buttonBack" mnemonicParsing="false" onAction="#handleBackButton" prefHeight="35.0" prefWidth="69.0" text="Accueil" BorderPane.alignment="TOP_LEFT">
+      <Button fx:id="buttonBack" mnemonicParsing="false" onAction="#handleBackButton" prefHeight="35.0" prefWidth="69.0" styleClass="boutton-mauve" stylesheets="@../button.css" BorderPane.alignment="TOP_LEFT">
          <BorderPane.margin>
             <Insets bottom="10.0" left="20.0" top="10.0" />
-         </BorderPane.margin></Button>
+         </BorderPane.margin>
+         <graphic>
+            <ImageView fitHeight="31.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../images/home.png" />
+               </image>
+            </ImageView>
+         </graphic></Button>
    </top>
    <right>
       <VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="523.0" prefWidth="344.0" spacing="30.0" BorderPane.alignment="CENTER">
@@ -75,16 +81,16 @@
                            </StackPane.margin>
                         </Button>
                         <ImageView fx:id="img" fitHeight="507.0" fitWidth="450.0" pickOnBounds="false" preserveRatio="true" />
-                        <Button fx:id="deletePhoto" onAction="#handleDeleteImage" maxWidth="-Infinity" minHeight="20.0" minWidth="31.0" mnemonicParsing="false"  prefHeight="31.0" prefWidth="31.0" styleClass="delete-button" stylesheets="@../style.css" text="X" StackPane.alignment="TOP_RIGHT" />
+                        <Button fx:id="deletePhoto" maxWidth="-Infinity" minHeight="20.0" minWidth="31.0" mnemonicParsing="false" onAction="#handleDeleteImage" prefHeight="31.0" prefWidth="31.0" styleClass="delete-button" stylesheets="@../style.css" text="X" StackPane.alignment="TOP_RIGHT" />
                      </children>
                   </StackPane>
 
                   <HBox fx:id="choixImage" alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="15.0">
 
                      <children>
-                        <RadioButton fx:id="radio1" mnemonicParsing="false"  text="Arrêté"  />
-                        <RadioButton fx:id="radioIPT" mnemonicParsing="false"  prefHeight="18.0" prefWidth="70.0" text="IPT"  />
-                        <RadioButton fx:id="radioDT" mnemonicParsing="false"  prefHeight="19.0" prefWidth="95.0" text="DT/DICT"  />
+                        <RadioButton fx:id="radio1" mnemonicParsing="false" text="Arrêté" />
+                        <RadioButton fx:id="radioIPT" mnemonicParsing="false" prefHeight="18.0" prefWidth="70.0" text="IPT" />
+                        <RadioButton fx:id="radioDT" mnemonicParsing="false" prefHeight="19.0" prefWidth="95.0" text="DT/DICT" />
                      </children>
                   </HBox>
                </children>

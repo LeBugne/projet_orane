@@ -6,6 +6,9 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.SplitMenuButton?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -16,7 +19,7 @@
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="656.0" prefWidth="1053.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="globale.controller.AccueilController">
    <left>
-      <VBox fx:id="panelGauche" alignment="TOP_CENTER" prefHeight="510.0" prefWidth="468.0" spacing="20.0" BorderPane.alignment="CENTER">
+      <VBox fx:id="panelGauche" alignment="TOP_CENTER" prefHeight="510.0" prefWidth="468.0" spacing="20.0" styleClass="simple-conic" stylesheets="@../background.css" BorderPane.alignment="CENTER">
          <padding>
             <Insets top="50.0" />
          </padding>
@@ -34,8 +37,7 @@
                   <Insets left="10.0" />
                </padding>
             </HBox>
-            <Button fx:id="buttonEdition" alignment="CENTER" mnemonicParsing="false" onAction="#handleButtonEdition" prefHeight="80.0" prefWidth="134.0" text="Edition" />
-            <Button fx:id="test" mnemonicParsing="false" onAction="#test" text="test" />
+            <Button fx:id="buttonEdition" alignment="CENTER" mnemonicParsing="false" onAction="#handleButtonEdition" prefHeight="68.0" prefWidth="134.0" styleClass="boutton-bleu" stylesheets="@../button.css" text="Edition" />
             <Label fx:id="message" text="Erreur">
                <VBox.margin>
                   <Insets top="110.0" />
@@ -57,10 +59,37 @@
                         <Font name="Monospaced Bold" size="13.0" />
                      </font>
                   </Label>
-                  <Button fx:id="sauver" mnemonicParsing="false" onAction="#handleSave" prefHeight="24.0" prefWidth="25.0" text="S" />
-                  <Button fx:id="exporter" mnemonicParsing="false" onAction="#handleExport" prefHeight="24.0" prefWidth="34.0" text="E" />
-                  <Button fx:id="importer" mnemonicParsing="false" onAction="#handleImport" prefHeight="24.0" prefWidth="31.0" text="I" />
-                  <SplitMenuButton fx:id="sortButton" mnemonicParsing="false" text="Trier">
+                  <Button fx:id="sauver" mnemonicParsing="false" onAction="#handleSave" prefHeight="40.0" prefWidth="40.0" styleClass="tooltip" stylesheets="@../button.css">
+                     <graphic>
+                        <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../images/diskette.png" />
+                           </image>
+                        </ImageView>
+                     </graphic></Button>
+                  <Button fx:id="exporter" mnemonicParsing="false" onAction="#handleExport" prefHeight="45.0" prefWidth="48.0" styleClass="boutton-mauve" stylesheets="@../button.css">
+                     <tooltip>
+                        <Tooltip text="Exporter la banque de données (au format json)" />
+                     </tooltip>
+                     <graphic>
+                        <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../images/export.png" />
+                           </image>
+                        </ImageView>
+                     </graphic></Button>
+                  <Button fx:id="importer" mnemonicParsing="false" onAction="#handleImport" prefHeight="40.0" prefWidth="40.0" styleClass="boutton-mauve" stylesheets="@../button.css">
+                     <tooltip>
+                        <Tooltip text="Importer une banque de données (au format json)" />
+                     </tooltip>
+                     <graphic>
+                        <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../images/import.png" />
+                           </image>
+                        </ImageView>
+                     </graphic></Button>
+                  <SplitMenuButton fx:id="sortButton" mnemonicParsing="false" stylesheets="@../splitmenu.css" text="Trier">
                      <HBox.margin>
                         <Insets left="40.0" />
                      </HBox.margin>

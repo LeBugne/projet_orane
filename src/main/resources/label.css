@@ -1,0 +1,25 @@
+
+.error-label {
+    -fx-text-fill: #d32f2f; /* Rouge foncé pour l'erreur */
+    -fx-background-color: #ffebee; /* Fond rouge clair */
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 8px;
+    -fx-border-color: #ef5350;
+    -fx-border-width: 1px;
+    -fx-border-radius: 4px;
+    -fx-background-radius: 4px;
+}
+
+.success-label {
+    -fx-text-fill: #2e7d32; /* Vert foncé pour le succès */
+    -fx-background-color: #e8f5e9; /* Fond vert clair */
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 8px;
+    -fx-border-color: #66bb6a;
+    -fx-border-width: 1px;
+    -fx-border-radius: 4px;
+    -fx-background-radius: 4px;
+}
+

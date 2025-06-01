@@ -1,0 +1,53 @@
+.boutton-bleu {
+    -fx-background-color: #6d88b5;
+    -fx-border-color: transparent;
+    -fx-border-radius: 16px;
+    -fx-border-width: 0 0 4px 0;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-family: "Arial"; /* Remplacer par "DIN Round" si disponible */
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-padding: 13px 16px;
+    -fx-alignment: center;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 10, 0.5, 2, 2);
+}
+
+.boutton-bleu:hover {
+    -fx-background-color: #07c68a;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.4), 15, 0.6, 3, 3);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+/* Style de la description textuel pendant le survol */
+.tooltip {
+    -fx-background-color: #333333; /* Fond gris foncé */
+    -fx-text-fill: white; /* Texte blanc */
+    -fx-font-size: 12px;
+    -fx-padding: 6px 10px;
+    -fx-background-radius: 4px;
+    -fx-border-radius: 4px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 5, 0, 0, 2); /* Ombre */
+}
+
+.boutton-mauve {
+    -fx-background-color: #a1688c;
+    -fx-border-color: transparent;
+    -fx-border-radius: 16px;
+    -fx-border-width: 0 0 4px 0;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-family: "Arial"; /* Remplacer par "DIN Round" si disponible */
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-alignment: center;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 10, 0.5, 2, 2);
+}
+
+.boutton-mauve:hover {
+    -fx-background-color: #c480ab;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.4), 15, 0.6, 3, 3);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}

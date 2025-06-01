@@ -67,26 +67,34 @@ public class AccueilController implements Observateur {
         update();
     }
 
-    public void afficherErreur(String texteCible){
-        this.message.setVisible(true);
-        this.message.setText(texteCible);
-        FadeTransition fade = new FadeTransition(Duration.seconds(2), this.message);
-        fade.setFromValue(0.0); // Complètement transparent - c'est le point de départ
-        fade.setToValue(1.0);   // Complètement opaque - point d'arrivée
-        fade.setAutoReverse(true); // Revenir en arrière
-        fade.setCycleCount(2);  // 1 apparition + 1 disparition
-        fade.play(); // Lancer l'animation
+    public void afficherErreur(String texteCible) {
+        message.setVisible(true);
+        message.setText(texteCible);
+        // Appliquer le style d'erreur
+        message.getStyleClass().remove("success-label");
+        message.getStyleClass().add("error-label");
+        // Animation
+        FadeTransition fade = new FadeTransition(Duration.seconds(2), message);
+        fade.setFromValue(0.0);
+        fade.setToValue(1.0);
+        fade.setAutoReverse(true);
+        fade.setCycleCount(2);
+        fade.play();
     }
 
-    public void afficherSucces(String texteCible){
-        this.message.setVisible(true);
-        this.message.setText(texteCible);
-        FadeTransition fade = new FadeTransition(Duration.seconds(2), this.message);
-        fade.setFromValue(0.0); // Complètement transparent - c'est le point de départ
-        fade.setToValue(1.0);   // Complètement opaque - point d'arrivée
-        fade.setAutoReverse(true); // Revenir en arrière
-        fade.setCycleCount(2);  // 1 apparition + 1 disparition
-        fade.play(); // Lancer l'animation
+    public void afficherSucces(String texteCible) {
+        message.setVisible(true);
+        message.setText(texteCible);
+        // Appliquer le style de succès
+        message.getStyleClass().remove("error-label");
+        message.getStyleClass().add("success-label");
+        // Animation
+        FadeTransition fade = new FadeTransition(Duration.seconds(2), message);
+        fade.setFromValue(0.0);
+        fade.setToValue(1.0);
+        fade.setAutoReverse(true);
+        fade.setCycleCount(2);
+        fade.play();
     }
 
     private void setupSearchBar() {
@@ -195,9 +203,15 @@ public class AccueilController implements Observateur {
     @FXML
     private void handleExport() {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON", "*.json"));
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON Files", "*.json"));
+        fileChooser.setInitialFileName("export.json"); // Nom par défaut
         File file = fileChooser.showSaveDialog(searchBar.getScene().getWindow());
         if (file != null) {
+            // Forcer l'extension .json
+            String filePath = file.getAbsolutePath();
+            if (!filePath.toLowerCase().endsWith(".json")) {
+                file = new File(filePath + ".json");
+            }
             try {
                 ObjectMapper mapper = new ObjectMapper();
                 mapper.writeValue(file, Travaux.getInstance().getChantierMap());

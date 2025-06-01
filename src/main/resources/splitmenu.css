@@ -1,0 +1,75 @@
+/* Style de base du SplitMenuButton */
+.split-menu-button {
+    -fx-background-color: #8b6dbf;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 8px 16px;
+    -fx-background-radius: 4px;
+    -fx-border-radius: 4px;
+    -fx-border-color: #4b4259; /* Bordure légèrement plus foncée */
+    -fx-border-width: 1px;
+    -fx-alignment: center; /* Centrer le texte */
+}
+
+/* Style de la partie flèche */
+.split-menu-button .arrow-button {
+    -fx-background-color: #333333; /* Gris plus foncé pour la flèche */
+    -fx-padding: 8px;
+    -fx-background-radius: 0 4px 4px 0; /* Coins arrondis à droite */
+}
+
+/* Style de la flèche elle-même */
+.split-menu-button .arrow {
+    -fx-background-color: white; /* Flèche blanche */
+    -fx-shape: "M 0 0 L 4 4 L 8 0 Z"; /* Triangle pointant vers le bas */
+}
+
+/* Effet au survol du bouton principal */
+.split-menu-button:hover {
+    -fx-background-color: #a143e8; /* Bleu légèrement plus clair */
+    -fx-cursor: hand;
+}
+
+/* Effet au survol de la flèche */
+.split-menu-button .arrow-button:hover {
+    -fx-background-color: #4b4259 /* Encore plus foncé */
+}
+
+/* Style du menu déroulant */
+.split-menu-button .context-menu {
+    -fx-background-color: #FFFFFF; /* Fond blanc */
+    -fx-border-color: #B0BEC5; /* Bordure grise */
+    -fx-border-width: 1px;
+    -fx-background-radius: 4px;
+    -fx-border-radius: 4px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 2); /* Ombre */
+}
+
+/* Style des MenuItem */
+.split-menu-button .menu-item {
+    -fx-background-color: transparent;
+    -fx-padding: 8px 16px;
+}
+
+/* Texte des MenuItem */
+.split-menu-button .menu-item .label {
+    -fx-text-fill: #333333; /* Texte gris foncé */
+    -fx-font-size: 13px;
+}
+
+/* Effet au survol des MenuItem */
+.split-menu-button .menu-item:hover {
+    -fx-background-color: #E3F2FD; /* Bleu très clair */
+}
+
+/* MenuItem sélectionné */
+.split-menu-button .menu-item:focused {
+    -fx-background-color: #BBDEFB; /* Bleu légèrement plus foncé */
+}
+
+/* Animation de transition */
+.split-menu-button {
+    -fx-transition: -fx-background-color 0.2s ease-in-out;
+}
+
