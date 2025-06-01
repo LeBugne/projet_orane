@@ -23,6 +23,8 @@ import javafx.util.Duration;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -35,10 +37,20 @@ public class AccueilController implements Observateur {
 
     /* -------------------- */
     @FXML private ScrollPane scrollPane;
+
+    /**
+     * Cet élément nous permet d'afficher les vignettes, à la façon d'une grille ( ou d'une matrice c'est selon ).
+     */
     @FXML private GridPane grille;
     @FXML private Button sauver;
     @FXML private Button exporter;
     @FXML private Button importer;
+    @FXML
+    private SplitMenuButton sortButton;
+    private String currentSortCriterion = "adresse"; // Critère par défaut
+
+
+
     private Travaux travaux ;
 
     public AccueilController(Travaux model){
@@ -51,6 +63,7 @@ public class AccueilController implements Observateur {
         this.grille.getStyleClass().add("grid");
         this.message.setVisible(false);
         setupSearchBar();
+        setButtonDeTri();
         update();
     }
 
@@ -212,6 +225,53 @@ public class AccueilController implements Observateur {
         }
     }
 
+
+    public void setButtonDeTri(){
+        // Configurer les options de tri
+        MenuItem sortByAddress = new MenuItem("Trier par adresse");
+        MenuItem sortByDate = new MenuItem("Trier par date");
+        MenuItem sortByCity = new MenuItem("Trier par ville");
+
+        // Associer les actions
+        sortByAddress.setOnAction(e -> {
+            currentSortCriterion = "adresse";
+            sortButton.setText("Trier par adresse");
+            trierChantier();
+        });
+        sortByDate.setOnAction(e -> {
+            currentSortCriterion = "date";
+            sortButton.setText("Trier par date");
+            trierChantier();
+        });
+        sortByCity.setOnAction(e -> {
+            currentSortCriterion = "ville";
+            sortButton.setText("Trier par ville");
+            trierChantier();
+        });
+
+        // Ajouter les options au menu
+        sortButton.getItems().addAll(sortByAddress, sortByDate, sortByCity);
+        sortButton.setText("Trier par adresse"); // Texte initial
+
+        // Action du bouton principal
+        sortButton.setOnAction(e -> trierChantier());
+    }
+
+    /**
+     *  ArrayList utilise un algorithme de tri intégré (TimSort via sort()), mais il a besoin d’un Comparator pour savoir comment comparer les éléments.
+     *  Ces lignes configurent et exécutent ce tri selon le critère choisi.
+     */
+    public void trierChantier(){
+        ArrayList<Chantier> sortedChantiers = new ArrayList<>(Travaux.getInstance().getChantierMap().values());
+        Comparator<Chantier> comparator = switch (currentSortCriterion) {
+            case "date" -> Comparator.comparing(Chantier::getDate);
+            case "ville" -> Comparator.comparing(Chantier::getVille, String.CASE_INSENSITIVE_ORDER);
+            default -> Comparator.comparing(Chantier::getAdresse, String.CASE_INSENSITIVE_ORDER);
+        };
+        sortedChantiers.sort(comparator);
+        afficherSuggestion(sortedChantiers);
+    }
+
     /**
      * Si on ajoute un chantier une vignette dois s'ajouter
      */
@@ -263,6 +323,10 @@ public class AccueilController implements Observateur {
         }
     }
 
+    /**
+     * Cette fonction nous servira pour afficher les suggestions que ce soit vià la barre de recherche ou le tri
+     * @param chantiers
+     */
     private void afficherSuggestion(List<Chantier> chantiers) {
         // Vider le GridPane
         grille.getChildren().clear();

@@ -80,15 +80,6 @@ public class Travaux extends SujetObserve implements Iterable{
         notifierObservateurs(); // le modèle a été modifié donc il faut prévenir tout le monde
     }
 
-    /*
-    public void ImportFromFile(File jsonFile) throws IOException {
-        JsonFileSelector selector = new JsonFileSelector();
-        File jsonFile = selector.selectJsonFile();
-        if (jsonFile.exists()) {
-            chantierMap = mapper.readValue(jsonFile, new TypeReference<Map<Integer, Chantier>>() {});
-        }
-        notifierObservateurs(); // le modèle a été modifié donc il faut prévenir tout le monde
-    }*/
     @Override
     public Iterator iterator() {
         return this.arrayList.iterator();

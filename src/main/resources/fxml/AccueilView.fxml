@@ -4,6 +4,7 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.SplitMenuButton?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -56,9 +57,14 @@
                         <Font name="Monospaced Bold" size="13.0" />
                      </font>
                   </Label>
-                  <Button fx:id="sauver" onAction="#handleSave" mnemonicParsing="false" prefHeight="24.0" prefWidth="25.0" text="S" />
-                  <Button fx:id="exporter" onAction="#handleExport" mnemonicParsing="false" prefHeight="24.0" prefWidth="34.0" text="E" />
-                  <Button fx:id="importer" onAction="#handleImport" mnemonicParsing="false" prefHeight="24.0" prefWidth="31.0" text="I" />
+                  <Button fx:id="sauver" mnemonicParsing="false" onAction="#handleSave" prefHeight="24.0" prefWidth="25.0" text="S" />
+                  <Button fx:id="exporter" mnemonicParsing="false" onAction="#handleExport" prefHeight="24.0" prefWidth="34.0" text="E" />
+                  <Button fx:id="importer" mnemonicParsing="false" onAction="#handleImport" prefHeight="24.0" prefWidth="31.0" text="I" />
+                  <SplitMenuButton fx:id="sortButton" mnemonicParsing="false" text="Trier">
+                     <HBox.margin>
+                        <Insets left="40.0" />
+                     </HBox.margin>
+                  </SplitMenuButton>
                </children>
             </HBox>
             <ScrollPane fx:id="scrollPane" fitToHeight="true" fitToWidth="true" VBox.vgrow="ALWAYS">               <content>
