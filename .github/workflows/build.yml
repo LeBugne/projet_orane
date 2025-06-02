@@ -73,6 +73,12 @@ jobs:
         run: mvn -P windows clean package
         shell: pwsh
 
+      - name: Copy main JAR to libs directory
+        run: |
+          Copy-Item -Path target/Kifekoi-1.0.jar -Destination target/libs/
+          Get-ChildItem -Path target/libs
+        shell: pwsh
+
       - name: Debug target directory
         run: |
           Get-ChildItem -Path target
@@ -100,7 +106,7 @@ jobs:
           Get-ChildItem -Path javafx-jars
           jlink `
             --module-path "javafx-jars;$env:JAVA_HOME\jmods" `
-            --add-modules java.base,javafx.base,javafx.controls,javafx.fxml,javafx.graphics,java.logging `
+            --add-modules java.base.javafx.base.javafx.controls.javafx.fxml.javafx.graphics.java.logging `
             --compress 2 `
             --no-header-files `
             --no-man-pages `
@@ -115,7 +121,7 @@ jobs:
             --type msi `
             --input target/libs `
             --dest dist `
-            --name Kifekoi `
+            --name Kifékoi `
             --main-jar Kifekoi-1.0.jar `
             --main-class globale.org.example.Main `
             --icon src/main/resources/icon.ico `
@@ -126,14 +132,14 @@ jobs:
       - name: Verify MSI file
         run: |
           Get-ChildItem -Path dist
-          if (-Not (Test-Path dist/Kifekoi-1.0.msi)) { Write-Error "Kifekoi-1.0.msi not found"; exit 1 }
+          if (-Not (Test-Path dist/Kifékoi-1.0.msi)) { Write-Error "Kifékoi-1.0.msi not found"; exit 1 }
         shell: pwsh
 
       - name: Upload Windows artifact
         uses: actions/upload-artifact@v4
         with:
           name: Kifekoi-windows
-          path: dist/Kifekoi-1.0.msi
+          path: dist/Kifékoi-1.0.msi
 
   release:
     needs: [build-linux, build-windows]
