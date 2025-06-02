@@ -168,10 +168,8 @@ public class AccueilController implements Observateur {
     @FXML
     private void handleButtonEdition() {
         try {
-            System.out.println("ta grand mère");
             // Créer le loader pour EditionView.fxml
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/EditionView.fxml"));
-            System.out.println("nous testons");
             // Utiliser l'instance existante de EditionController
             EditionController ec = ControllerManager.getInstance().getEditionController();
             loader.setControllerFactory(param -> ec);

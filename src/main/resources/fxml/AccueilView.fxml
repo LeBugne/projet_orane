@@ -63,7 +63,7 @@
                      <graphic>
                         <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../images/diskette.png" />
+                              <Image url="@/images/diskette.png" />
                            </image>
                         </ImageView>
                      </graphic></Button>
@@ -74,7 +74,7 @@
                      <graphic>
                         <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../images/export.png" />
+                              <Image url="@/images/export.png" />
                            </image>
                         </ImageView>
                      </graphic></Button>
@@ -85,7 +85,7 @@
                      <graphic>
                         <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../images/import.png" />
+                              <Image url="@/images/import.png" />
                            </image>
                         </ImageView>
                      </graphic></Button>
