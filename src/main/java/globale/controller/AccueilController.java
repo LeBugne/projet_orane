@@ -48,15 +48,17 @@ public class AccueilController implements Observateur {
     @FXML
     private SplitMenuButton sortButton;
     private String currentSortCriterion = "adresse"; // Critère par défaut
-
-
-
     private Travaux travaux ;
+
+    public AccueilController() {
+        // Initialisation vide
+    }
 
     public AccueilController(Travaux model){
         this.travaux = model;
         this.travaux.ajouterObservateur(this);
     }
+
 
     @FXML
     public void initialize() throws IOException {
