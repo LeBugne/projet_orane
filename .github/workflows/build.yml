@@ -52,89 +52,88 @@ jobs:
           name: MonApp-linux
           path: dist/*.deb
 
-  build-windows:
-    runs-on: windows-latest
-    steps:
-      - name: Checkout source
-        uses: actions/checkout@v4
+build-windows:
+  runs-on: windows-latest
+  steps:
+    - name: Checkout source
+      uses: actions/checkout@v4
 
-      - name: Set up JDK
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '17'
-          cache: 'maven'
+    - name: Set up JDK
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: '17'
+        cache: 'maven'
 
-      - name: Resolve dependencies
-        run: mvn -P windows dependency:go-offline
-        shell: pwsh
+    - name: Resolve dependencies
+      run: mvn -P windows dependency:go-offline
+      shell: pwsh
 
-      - name: Build JAR with Maven
-        run: mvn -P windows clean package
-        shell: pwsh
+    - name: Build JAR with Maven
+      run: mvn -P windows clean package
+      shell: pwsh
 
-      - name: Debug target directory
-        run: |
-          Get-ChildItem -Path target
-          Get-ChildItem -Path target/libs
-        shell: pwsh
+    - name: Debug target directory
+      run: |
+        Get-ChildItem -Path target
+        Get-ChildItem -Path target/libs
+      shell: pwsh
 
-      - name: Verify JavaFX dependencies
-        run: |
-          $m2Repo = Join-Path $env:USERPROFILE ".m2/repository/org/openjfx"
-          $javafxVersion = "19.0.2.1"
-          Get-ChildItem -Path (Join-Path $m2Repo "javafx-base/$javafxVersion") -Filter "javafx-base-$javafxVersion-win.jar" -ErrorAction Stop
-          Get-ChildItem -Path (Join-Path $m2Repo "javafx-controls/$javafxVersion") -Filter "javafx-controls-$javafxVersion-win.jar" -ErrorAction Stop
-          Get-ChildItem -Path (Join-Path $m2Repo "javafx-fxml/$javafxVersion") -Filter "javafx-fxml-$javafxVersion-win.jar" -ErrorAction Stop
-          Get-ChildItem -Path (Join-Path $m2Repo "javafx-graphics/$javafxVersion") -Filter "javafx-graphics-$javafxVersion-win.jar" -ErrorAction Stop
-        shell: pwsh
+    - name: Verify JavaFX dependencies
+      run: |
+        $m2Repo = Join-Path $env:USERPROFILE ".m2/repository/org/openjfx"
+        $javafxVersion = "19.0.2.1"
+        Get-ChildItem -Path (Join-Path $m2Repo "javafx-base/$javafxVersion") -Filter "javafx-base-$javafxVersion-win.jar" -ErrorAction Stop
+        Get-ChildItem -Path (Join-Path $m2Repo "javafx-controls/$javafxVersion") -Filter "javafx-controls-$javafxVersion-win.jar" -ErrorAction Stop
+        Get-ChildItem -Path (Join-Path $m2Repo "javafx-fxml/$javafxVersion") -Filter "javafx-fxml-$javafxVersion-win.jar" -ErrorAction Stop
+        Get-ChildItem -Path (Join-Path $m2Repo "javafx-graphics/$javafxVersion") -Filter "javafx-graphics-$javafxVersion-win.jar" -ErrorAction Stop
+      shell: pwsh
 
-      - name: Create Runtime Image with jlink
-        run: |
-          $javafxVersion = "19.0.2.1"
-          New-Item -ItemType Directory -Path javafx-jars -Force
-          Copy-Item -Path "target/libs/javafx-base-$javafxVersion-win.jar" -Destination javafx-jars/
-          Copy-Item -Path "target/libs/javafx-controls-$javafxVersion-win.jar" -Destination javafx-jars/
-          Copy-Item -Path "target/libs/javafx-fxml-$javafxVersion-win.jar" -Destination javafx-jars/
-          Copy-Item -Path "target/libs/javafx-graphics-$javafxVersion-win.jar" -Destination javafx-jars/
-          Get-ChildItem -Path javafx-jars
-          jlink `
-            --module-path "javafx-jars;$env:JAVA_HOME\jmods" `
-            --add-modules java.base,javafx.base,javafx.controls,javafx.fxml,javafx.graphics,java.logging `
-            --compress 2 `
-            --no-header-files `
-            --no-man-pages `
-            --strip-debug `
-            --output runtime
-          if (-Not (Test-Path runtime)) { Write-Error "Runtime image not created"; exit 1 }
-        shell: pwsh
+    - name: Create Runtime Image with jlink
+      run: |
+        $javafxVersion = "19.0.2.1"
+        New-Item -ItemType Directory -Path javafx-jars -Force
+        Copy-Item -Path "target/libs/javafx-base-$javafxVersion-win.jar" -Destination javafx-jars/
+        Copy-Item -Path "target/libs/javafx-controls-$javafxVersion-win.jar" -Destination javafx-jars/
+        Copy-Item -Path "target/libs/javafx-fxml-$javafxVersion-win.jar" -Destination javafx-jars/
+        Copy-Item -Path "target/libs/javafx-graphics-$javafxVersion-win.jar" -Destination javafx-jars/
+        Get-ChildItem -Path javafx-jars
+        jlink `
+          --module-path "javafx-jars;$env:JAVA_HOME\jmods" `
+          --add-modules java.base,javafx.base,javafx.controls,javafx.fxml,javafx.graphics,java.logging `
+          --compress 2 `
+          --no-header-files `
+          --no-man-pages `
+          --strip-debug `
+          --output runtime
+        if (-Not (Test-Path runtime)) { Write-Error "Runtime image not created"; exit 1 }
+      shell: pwsh
 
-      - name: Build Windows executable with jpackage
-        run: |
-          jpackage `
-            --type msi `
-            --input target/libs `
-            --dest dist `
-            --name TravauxApp `
-            --main-jar TravauxApp-1.0.jar `
-            --main-class globale.org.example.Main `
-            --icon src/main/resources/icon.ico `
-            --runtime-image runtime `
-            --win-shortcut `
-            --win-dir-name TravauxApp
-        shell: pwsh
+    - name: Build Windows executable with jpackage
+      run: |
+        jpackage `
+          --type msi `
+          --input target/libs `
+          --dest dist `
+          --name TravauxApp `
+          --main-jar TravauxApp-1.0.jar `
+          --main-class globale.org.example.Main `
+          --icon src/main/resources/icon.ico `
+          --runtime-image runtime `
+          --win-shortcut
+      shell: pwsh
 
-      - name: Verify MSI file
-        run: |
-          Get-ChildItem -Path dist
-          if (-Not (Test-Path dist/TravauxApp-1.0.msi)) { Write-Error "TravauxApp-1.0.msi not found"; exit 1 }
-        shell: pwsh
+    - name: Verify MSI file
+      run: |
+        Get-ChildItem -Path dist
+        if (-Not (Test-Path dist/TravauxApp-1.0.msi)) { Write-Error "TravauxApp-1.0.msi not found"; exit 1 }
+      shell: pwsh
 
-      - name: Upload Windows artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: MonApp-windows
-          path: dist/TravauxApp-1.0.msi
+    - name: Upload Windows artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: MonApp-windows
+        path: dist/TravauxApp-1.0.msi
 
   release:
     needs: [build-linux, build-windows]
