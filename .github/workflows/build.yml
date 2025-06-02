@@ -134,7 +134,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: MonApp-windows
-        path: dist/TravauxApp-1.0.msi
+          path: dist/TravauxApp-1.0.msi
 
   release:
     needs: [build-linux, build-windows]
