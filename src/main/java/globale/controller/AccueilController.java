@@ -50,10 +50,6 @@ public class AccueilController implements Observateur {
     private String currentSortCriterion = "adresse"; // Critère par défaut
     private Travaux travaux ;
 
-    public AccueilController() {
-        // Initialisation vide
-    }
-
     public AccueilController(Travaux model){
         this.travaux = model;
         this.travaux.ajouterObservateur(this);
