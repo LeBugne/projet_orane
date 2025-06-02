@@ -115,8 +115,8 @@ jobs:
             --type msi `
             --input target/libs `
             --dest dist `
-            --name Kifékoi `
-            --main-jar Kifékoi-1.0.jar `
+            --name Kifekoi `
+            --main-jar Kifekoi-1.0.jar `
             --main-class globale.org.example.Main `
             --icon src/main/resources/icon.ico `
             --runtime-image runtime `
@@ -126,14 +126,14 @@ jobs:
       - name: Verify MSI file
         run: |
           Get-ChildItem -Path dist
-          if (-Not (Test-Path dist/Kifékoi-1.0.msi)) { Write-Error "Kifékoi-1.0.msi not found"; exit 1 }
+          if (-Not (Test-Path dist/Kifekoi-1.0.msi)) { Write-Error "Kifekoi-1.0.msi not found"; exit 1 }
         shell: pwsh
 
       - name: Upload Windows artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Kifékoi-windows
-          path: dist/Kifékoi-1.0.msi
+          name: Kifekoi-windows
+          path: dist/Kifekoi-1.0.msi
 
   release:
     needs: [build-linux, build-windows]
