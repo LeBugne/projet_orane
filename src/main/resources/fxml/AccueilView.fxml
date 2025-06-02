@@ -19,7 +19,7 @@
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="656.0" prefWidth="1053.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="globale.controller.AccueilController">
    <left>
-      <VBox fx:id="panelGauche" alignment="TOP_CENTER" prefHeight="510.0" prefWidth="468.0" spacing="20.0" styleClass="simple-conic" stylesheets="@../background.css" BorderPane.alignment="CENTER">
+      <VBox fx:id="panelGauche" alignment="TOP_CENTER" prefHeight="510.0" prefWidth="468.0" spacing="20.0" styleClass="simple-conic" stylesheets="@../css/background.css" BorderPane.alignment="CENTER">
          <padding>
             <Insets top="50.0" />
          </padding>
@@ -37,7 +37,7 @@
                   <Insets left="10.0" />
                </padding>
             </HBox>
-            <Button fx:id="buttonEdition" alignment="CENTER" mnemonicParsing="false" onAction="#handleButtonEdition" prefHeight="68.0" prefWidth="134.0" styleClass="boutton-bleu" stylesheets="@../button.css" text="Edition" />
+            <Button fx:id="buttonEdition" alignment="CENTER" mnemonicParsing="false" onAction="#handleButtonEdition" prefHeight="68.0" prefWidth="134.0" styleClass="boutton-bleu" stylesheets="@../css/button.css" text="Edition" />
             <Label fx:id="message" text="Erreur">
                <VBox.margin>
                   <Insets top="110.0" />
@@ -59,7 +59,7 @@
                         <Font name="Monospaced Bold" size="13.0" />
                      </font>
                   </Label>
-                  <Button fx:id="sauver" mnemonicParsing="false" onAction="#handleSave" prefHeight="40.0" prefWidth="40.0" styleClass="tooltip" stylesheets="@../button.css">
+                  <Button fx:id="sauver" mnemonicParsing="false" onAction="#handleSave" prefHeight="40.0" prefWidth="40.0" styleClass="tooltip" stylesheets="@../css/button.css">
                      <graphic>
                         <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -67,7 +67,7 @@
                            </image>
                         </ImageView>
                      </graphic></Button>
-                  <Button fx:id="exporter" mnemonicParsing="false" onAction="#handleExport" prefHeight="45.0" prefWidth="48.0" styleClass="boutton-mauve" stylesheets="@../button.css">
+                  <Button fx:id="exporter" mnemonicParsing="false" onAction="#handleExport" prefHeight="45.0" prefWidth="48.0" styleClass="boutton-mauve" stylesheets="@../css/button.css">
                      <tooltip>
                         <Tooltip text="Exporter la banque de données (au format json)" />
                      </tooltip>
@@ -78,7 +78,7 @@
                            </image>
                         </ImageView>
                      </graphic></Button>
-                  <Button fx:id="importer" mnemonicParsing="false" onAction="#handleImport" prefHeight="40.0" prefWidth="40.0" styleClass="boutton-mauve" stylesheets="@../button.css">
+                  <Button fx:id="importer" mnemonicParsing="false" onAction="#handleImport" prefHeight="40.0" prefWidth="40.0" styleClass="boutton-mauve" stylesheets="@../css/button.css">
                      <tooltip>
                         <Tooltip text="Importer une banque de données (au format json)" />
                      </tooltip>
@@ -89,7 +89,7 @@
                            </image>
                         </ImageView>
                      </graphic></Button>
-                  <SplitMenuButton fx:id="sortButton" mnemonicParsing="false" stylesheets="@../splitmenu.css" text="Trier">
+                  <SplitMenuButton fx:id="sortButton" mnemonicParsing="false" stylesheets="@../css/splitmenu.css" text="Trier">
                      <HBox.margin>
                         <Insets left="40.0" />
                      </HBox.margin>
@@ -97,7 +97,7 @@
                </children>
             </HBox>
             <ScrollPane fx:id="scrollPane" fitToHeight="true" fitToWidth="true" VBox.vgrow="ALWAYS">               <content>
-               <GridPane fx:id="grille" styleClass="grid" stylesheets="@/style.css">
+               <GridPane fx:id="grille" styleClass="grid" stylesheets="@/css/style.css">
                     <columnConstraints>
                        <ColumnConstraints minWidth="10.0" />
                     </columnConstraints>

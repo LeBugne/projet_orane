@@ -15,7 +15,7 @@
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="656.0" prefWidth="1053.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="globale.controller.EditionController">
    <top>
-      <Button fx:id="buttonBack" mnemonicParsing="false" onAction="#handleBackButton" prefHeight="35.0" prefWidth="69.0" styleClass="boutton-mauve" stylesheets="@../button.css" BorderPane.alignment="TOP_LEFT">
+      <Button fx:id="buttonBack" mnemonicParsing="false" onAction="#handleBackButton" prefHeight="35.0" prefWidth="69.0" styleClass="boutton-mauve" stylesheets="@../css/button.css" BorderPane.alignment="TOP_LEFT">
          <BorderPane.margin>
             <Insets bottom="10.0" left="20.0" top="10.0" />
          </BorderPane.margin>
@@ -34,34 +34,34 @@
             <VBox prefHeight="43.0" prefWidth="344.0">
                <children>
                   <Label prefHeight="16.0" prefWidth="77.0" text="Adresse * " textFill="#dd0505" />
-                  <TextField fx:id="adrChantier" onAction="#handlePremierTextField" promptText="19 rue de la Libération..." styleClass="text-field" stylesheets="@../style.css" />
+                  <TextField fx:id="adrChantier" onAction="#handlePremierTextField" promptText="19 rue de la Libération..." styleClass="text-field" stylesheets="@../css/style.css" />
                </children>
             </VBox>
             <VBox prefHeight="43.0" prefWidth="344.0">
                <children>
                   <Label prefHeight="16.0" prefWidth="111.0" text="Concessionaire *" textFill="#dd0505" />
-                  <TextField fx:id="concessionnaire" onAction="#handlePremierTextField" promptText="Veolia, Sogelink..." styleClass="text-field" stylesheets="@../style.css" />
+                  <TextField fx:id="concessionnaire" onAction="#handlePremierTextField" promptText="Veolia, Sogelink..." styleClass="text-field" stylesheets="@../css/style.css" />
                </children>
             </VBox>
             <VBox prefHeight="43.0" prefWidth="344.0">
                <children>
                   <Label prefHeight="16.0" prefWidth="111.0" text="Ville" />
-                  <TextField fx:id="ville" promptText="Uckange,Forbach" styleClass="text-field-red" stylesheets="@../style.css" />
+                  <TextField fx:id="ville" promptText="Uckange,Forbach" styleClass="text-field-red" stylesheets="@../css/style.css" />
                </children>
             </VBox>
             <VBox prefHeight="43.0" prefWidth="344.0">
                <children>
                   <Label prefHeight="16.0" prefWidth="111.0" text="Téléphone" />
-                  <TextField fx:id="tel" promptText="07 12 24 27 14" styleClass="text-field" stylesheets="@../style.css" />
+                  <TextField fx:id="tel" promptText="07 12 24 27 14" styleClass="text-field" stylesheets="@../css/style.css" />
                </children>
             </VBox>
             <VBox prefHeight="43.0" prefWidth="344.0">
                <children>
                   <Label prefHeight="16.0" prefWidth="111.0" text="Responsable" textFill="#000000" />
-                  <TextField fx:id="responsable" onAction="#handlePremierTextField" promptText="Didier DUCHAMPS" styleClass="text-field" stylesheets="@../style.css" />
+                  <TextField fx:id="responsable" onAction="#handlePremierTextField" promptText="Didier DUCHAMPS" styleClass="text-field" stylesheets="@../css/style.css" />
                </children>
             </VBox>
-            <Button fx:id="crée" mnemonicParsing="false" onAction="#handleAjoutezButton" prefHeight="70.0" prefWidth="147.0" styleClass="boutton-bleu" stylesheets="@../style.css" text="Ajoutez" />
+            <Button fx:id="crée" mnemonicParsing="false" onAction="#handleAjoutezButton" prefHeight="70.0" prefWidth="147.0" styleClass="boutton-bleu" stylesheets="@../css/style.css" text="Ajoutez" />
          </children>
          <BorderPane.margin>
             <Insets right="20.0" />
@@ -69,7 +69,7 @@
       </VBox>
    </right>
    <center>
-      <HBox fx:id="cadrePhoto" alignment="CENTER" prefHeight="577.0" prefWidth="619.0" spacing="5.0" styleClass="bordered-hbox" stylesheets="@../style.css" BorderPane.alignment="CENTER">
+      <HBox fx:id="cadrePhoto" alignment="CENTER" prefHeight="577.0" prefWidth="619.0" spacing="5.0" styleClass="bordered-hbox" stylesheets="@../css/style.css" BorderPane.alignment="CENTER">
          <children>
             <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="10.0">
                <children>
@@ -81,7 +81,7 @@
                            </StackPane.margin>
                         </Button>
                         <ImageView fx:id="img" fitHeight="507.0" fitWidth="450.0" pickOnBounds="false" preserveRatio="true" />
-                        <Button fx:id="deletePhoto" maxWidth="-Infinity" minHeight="20.0" minWidth="31.0" mnemonicParsing="false" onAction="#handleDeleteImage" prefHeight="31.0" prefWidth="31.0" styleClass="delete-button" stylesheets="@../style.css" text="X" StackPane.alignment="TOP_RIGHT" />
+                        <Button fx:id="deletePhoto" maxWidth="-Infinity" minHeight="20.0" minWidth="31.0" mnemonicParsing="false" onAction="#handleDeleteImage" prefHeight="31.0" prefWidth="31.0" styleClass="delete-button" stylesheets="@../css/style.css" text="X" StackPane.alignment="TOP_RIGHT" />
                      </children>
                   </StackPane>
 
