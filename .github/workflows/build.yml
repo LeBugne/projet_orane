@@ -106,7 +106,7 @@ jobs:
           Get-ChildItem -Path javafx-jars
           jlink `
             --module-path "javafx-jars;$env:JAVA_HOME\jmods" `
-            --add-modules java.base.javafx.base.javafx.controls.javafx.fxml.javafx.graphics.java.logging `
+            --add-modules java.base,javafx.base,javafx.controls,javafx.fxml,javafx.graphics,java.logging `
             --compress 2 `
             --no-header-files `
             --no-man-pages `
