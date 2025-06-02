@@ -115,7 +115,7 @@ jobs:
             --type msi `
             --input target/libs `
             --dest dist `
-            --name TravauxApp `
+            --name Kifékoi `
             --main-jar TravauxApp-1.0.jar `
             --main-class globale.org.example.Main `
             --icon src/main/resources/icon.ico `
@@ -126,14 +126,14 @@ jobs:
       - name: Verify MSI file
         run: |
           Get-ChildItem -Path dist
-          if (-Not (Test-Path dist/TravauxApp-1.0.msi)) { Write-Error "TravauxApp-1.0.msi not found"; exit 1 }
+          if (-Not (Test-Path dist/Kifékoi-1.0.msi)) { Write-Error "Kifékoi-1.0.msi not found"; exit 1 }
         shell: pwsh
 
       - name: Upload Windows artifact
         uses: actions/upload-artifact@v4
         with:
-          name: MonApp-windows
-          path: dist/TravauxApp-1.0.msi
+          name: Kifékoi-windows
+          path: dist/Kifékoi-1.0.msi
 
   release:
     needs: [build-linux, build-windows]
