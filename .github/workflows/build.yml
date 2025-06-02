@@ -116,7 +116,7 @@ jobs:
             --input target/libs `
             --dest dist `
             --name Kifékoi `
-            --main-jar TravauxApp-1.0.jar `
+            --main-jar Kifékoi-1.0.jar `
             --main-class globale.org.example.Main `
             --icon src/main/resources/icon.ico `
             --runtime-image runtime `
